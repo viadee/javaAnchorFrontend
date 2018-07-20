@@ -1,0 +1,33 @@
+<div class="container">
+  <form>
+    <div layout="row" layout-gt-md="column" layout-margin>
+      <div flex>
+        <mat-form-field>
+          <mat-select placeholder="H2O Instance" (selectionChange)="loadModelsAndFrames($event.value)">
+            <mat-option *ngFor="let instance of h2oInstances" [value]="instance">
+              {{instance}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div flex>
+        <mat-form-field>
+          <mat-select placeholder="Models" [disabled]="selectedInstance == null">
+            <mat-option *ngFor="let model of models" [value]="model.id">
+              {{model.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div flex>
+        <mat-form-field>
+          <mat-select placeholder="Data Frames" [disabled]="selectedInstance == null">
+            <mat-option *ngFor="let frame of frames" [value]="frame.id">
+              {{frame.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
