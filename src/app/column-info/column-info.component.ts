@@ -8,7 +8,8 @@ import {ColumnInfo} from '../_models/ColumnInfo';
 })
 export class ColumnInfoComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   @Input() columns: ColumnInfo[];
 

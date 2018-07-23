@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {ColumnInfo} from '../_models/ColumnInfo';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-data-overview',
@@ -23,9 +24,19 @@ export class DataOverviewComponent implements OnInit {
   selectedConnection(event) {
     this.connectionInfo = event;
     this._h2oApi
-      .getDataFrame(this.connectionInfo.server, this.connectionInfo.frame.id as string).subscribe(data => {
-      this.columns = JSON.parse(data);
-    });
+      .getDataFrame(this.connectionInfo.server, this.connectionInfo.frame.id as string)
+      .subscribe(data => {
+        this.columns = JSON.parse(data);
+      });
+  }
+
+  reshapeCategoriesToArrays(categoriesDict: {}) {
+    const categoriesArr = [];
+    for (const category_key of Object.keys(categoriesDict)) {
+      categoriesArr.push({name: category_key, freq: categoriesDict[category_key]});
+    }
+
+    return categoriesArr;
   }
 
 }
