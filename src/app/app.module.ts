@@ -1,27 +1,35 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
-import {routing} from './app.routing';
-
-import { AppComponent } from './app.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CustomMaterialModuleModule} from './custom-material-module/custom-material-module.module';
-import { SelectModelComponent } from './select-model/select-model.component';
+import {AppComponent} from './app.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {routing} from './app.routing';
+import {SelectModelComponent} from './select-model/select-model.component';
+import { ColumnInfoComponent } from './column-info/column-info.component';
+import { DataOverviewComponent } from './data-overview/data-overview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SelectModelComponent,
+    ColumnInfoComponent,
+    DataOverviewComponent,
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    CustomMaterialModuleModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
+    // Ng2SmartTableModule,
+    // BsDropdownModule.forRoot(),
+    // ModalModule.forRoot(),
+    // ChartsModule,
     routing
   ],
   providers: [],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -1,32 +1,45 @@
+<!--<div class="container">-->
+<!--<form>-->
+
+<div class="jumbotron text-center">
+  <h1>My First Bootstrap Page</h1>
+  <p>Resize this responsive page to see the effect!</p>
+</div>
+
 <div class="container">
-  <form>
-    <div layout="row" layout-gt-md="column" layout-margin>
-      <div flex>
-        <mat-form-field>
-          <mat-select placeholder="H2O Instance" (selectionChange)="loadModelsAndFrames($event.value)">
-            <mat-option *ngFor="let instance of h2oInstances" [value]="instance">
-              {{instance}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+  <form #selectModel="ngForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="form-group">
+          <label for="server">Select Server:</label>
+          <select class="form-control" id="server" (change)="loadModelsAndFrames($event)"
+                  [(ngModel)]="selectedInstance" name="server" #name="ngModel" required>
+            <option *ngFor="let instance of h2oInstances" [ngValue]="instance">{{instance}}</option>
+          </select>
+        </div>
       </div>
-      <div flex>
-        <mat-form-field>
-          <mat-select placeholder="Models" [disabled]="selectedInstance == null">
-            <mat-option *ngFor="let model of models" [value]="model.id">
-              {{model.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="model">Select Model:</label>
+          <select class="form-control" id="model" [disabled]="selectedInstance == null" [(ngModel)]="selectedModel"
+                  name="model" #name="ngModel" required>
+            <option *ngFor="let model of models" [ngValue]="model">{{model.name}}</option>
+          </select>
+        </div>
       </div>
-      <div flex>
-        <mat-form-field>
-          <mat-select placeholder="Data Frames" [disabled]="selectedInstance == null">
-            <mat-option *ngFor="let frame of frames" [value]="frame.id">
-              {{frame.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="frame">Select Frame:</label>
+          <select class="form-control" id="frame" [disabled]="selectedInstance == null" [(ngModel)]="selectedFrame"
+                  name="frame" #name="ngModel" required>
+            <option *ngFor="let frame of frames" [ngValue]="frame">{{frame.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-1">
+        <div class="form-group" style="margin-top: 30px">
+          <button type="submit" class="btn btn-success">Select</button>
+        </div>
       </div>
     </div>
   </form>
