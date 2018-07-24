@@ -24,19 +24,10 @@ export class DataOverviewComponent implements OnInit {
   selectedConnection(event) {
     this.connectionInfo = event;
     this._h2oApi
-      .getDataFrame(this.connectionInfo.server, this.connectionInfo.frame.id as string)
+      .getDataFrame(this.connectionInfo.server, this.connectionInfo.frame.frame_id as string)
       .subscribe(data => {
         this.columns = JSON.parse(data);
       });
-  }
-
-  reshapeCategoriesToArrays(categoriesDict: {}) {
-    const categoriesArr = [];
-    for (const category_key of Object.keys(categoriesDict)) {
-      categoriesArr.push({name: category_key, freq: categoriesDict[category_key]});
-    }
-
-    return categoriesArr;
   }
 
 }

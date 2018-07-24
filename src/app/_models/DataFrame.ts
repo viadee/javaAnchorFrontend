@@ -1,6 +1,6 @@
 export class DataFrame {
   constructor(
-    public id: String,
+    public frame_id: String,
     public name: String,
     public url: String) {
 

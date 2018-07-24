@@ -21,7 +21,7 @@
       <div class="col-lg-4">
         <div class="form-group">
           <label for="model">Select Model:</label>
-          <select class="form-control" id="model" [disabled]="selectedInstance == null" [(ngModel)]="selectedModel"
+          <select class="form-control" id="model" [disabled]="models == null" [(ngModel)]="selectedModel"
                   name="model" #name="ngModel" required>
             <option *ngFor="let model of models" [ngValue]="model">{{model.name}}</option>
           </select>
@@ -30,7 +30,7 @@
       <div class="col-lg-4">
         <div class="form-group">
           <label for="frame">Select Frame:</label>
-          <select class="form-control" id="frame" [disabled]="selectedInstance == null" [(ngModel)]="selectedFrame"
+          <select class="form-control" id="frame" [disabled]="selectedModel == null" [(ngModel)]="selectedFrame"
                   name="frame" #name="ngModel" required>
             <option *ngFor="let frame of frames" [ngValue]="frame">{{frame.name}}</option>
           </select>

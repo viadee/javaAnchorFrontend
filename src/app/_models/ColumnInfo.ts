@@ -1,11 +1,12 @@
 import {CategoryFreq} from './CategoryFreq';
 
 export interface ColumnInfo {
+  frame_id: String;
   label: String;
-  min: number;
-  max: number;
+  column_min: number;
+  column_max: number;
   mean: number;
-  type: string;
+  column_type: string;
   missing_count: number;
   data: Array<any>;
   categories: CategoryFreq[];
