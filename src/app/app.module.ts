@@ -10,6 +10,7 @@ import { ColumnInfoComponent } from './column-info/column-info.component';
 import { DataOverviewComponent } from './data-overview/data-overview.component';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import {Ng2SmartTableModule} from 'ng2-smart-table';
 
 registerLocaleData(localeDe, 'de');
 
@@ -25,7 +26,7 @@ registerLocaleData(localeDe, 'de');
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    // Ng2SmartTableModule,
+    Ng2SmartTableModule,
     // BsDropdownModule.forRoot(),
     // ModalModule.forRoot(),
     // ChartsModule,

@@ -1,8 +1,6 @@
-<div class="col-lg-12">
-  <!--<div class="row">-->
-  <!--<div class="col-lg-3">-->
-  <div class="card-deck">
-    <div class="col-lg-4" *ngFor="let column of columns">
+<div class="container">
+  <div class=" card-deck">
+    <div class="col-lg-3" *ngFor="let column of columns">
       <div class="card box-shadow mx-0 my-2">
         <div class="card-header">
           <h4 class="font-weight-normal">{{ column.label }}</h4>
@@ -10,66 +8,69 @@
         <div class="card-body">
 
           <table class="table">
-            <!--<thead>-->
-            <!--<tr>-->
-              <!--<th scope="col">Name</th>-->
-              <!--<th>Value</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
             <tbody>
             <tr>
               <td>Type</td>
               <td class="text-right">{{ column.column_type }}</td>
             </tr>
+
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Min</td>
-              <td class="text-right">{{ column.column_min | number:'1.0-4':'de' }}</td>
+              <td class="text-right">{{ column.column_min | number:'1.0-2':'de' }}</td>
             </tr>
+
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Max</td>
-              <td class="text-right">{{ column.column_max | number:'1.0-4':'de' }}</td>
+              <td class="text-right">{{ column.column_max | number:'1.0-2':'de' }}</td>
             </tr>
+
             <tr>
               <td>Missing</td>
-              <td class="text-right">{{ column.missing_count | number:'1.0-4':'de' }}</td>
+              <td class="text-right">{{ column.missing_count | number:'1.0-2':'de' }}</td>
             </tr>
+
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Mean</td>
-              <td class="text-right">{{ column.mean | number:'1.0-4':'de' }}</td>
+              <td class="text-right">{{ column.mean | number:'1.0-2':'de' }}</td>
             </tr>
+
             <tr *ngIf="column.column_type === 'enum'">
               <td>Unique</td>
               <td class="text-right"></td>
             </tr>
+
             <tr *ngIf="column.column_type === 'enum'">
               <td colspan="2">
-                <select class="selectpicker" data-live-search="true">
-                  <option></option>
-                  <option *ngFor="let cat of column.categories">{{ cat.name + ": " + (cat.freq | number:'1.0-4':'de') }}</option>
-                </select>
+                <div class="cat-freq-table">
+                  <table class="table table-striped">
+                    <thead>
+                    <tr class="h-25">
+                      <th>Name</th>
+                      <th class="text-right">Freq.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let cat of column.categories" class="cat-row">
+                      <td>{{cat.name}}</td>
+                      <td class="text-right">{{ cat.freq | number:'1.0-4':'de' }}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--<select data-live-search="true">-->
+                <!--<option *ngFor="let cat of column.categories">{{ cat.name }}:{{ cat.freq | number:'1.0-4':'de' }}-->
+                <!--</option>-->
+                <!--</select>-->
               </td>
             </tr>
             </tbody>
           </table>
-
-
-          <!--<table class="table enum-info" *ngIf="column.column_type === 'enum'">-->
-            <!--<thead>-->
-            <!--<tr>-->
-              <!--<th scope="col">Name</th>-->
-              <!--<th>Frequency</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<tr *ngFor="let cat of column.categories">-->
-              <!--<td>{{ cat.name }}</td>-->
-              <!--<td>{{ cat.freq }}</td>-->
-            <!--</tr>-->
-            <!--</tbody>-->
-          <!--</table>-->
         </div>
       </div>
+
     </div>
   </div>
-  <!--</div>-->
+  <div class="col-12">
+    <ng2-smart-table [settings]="settings" [source]="columns"></ng2-smart-table>
+  </div>
 </div>
