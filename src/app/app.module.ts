@@ -10,6 +10,8 @@ import { ColumnInfoComponent } from './column-info/column-info.component';
 import { DataOverviewComponent } from './data-overview/data-overview.component';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import { DataListComponent } from './data-list/data-list.component';
+import { SelectCaseForAnalysisComponent } from './select-case-for-analysis/select-case-for-analysis.component';
+import { RulesetOverviewComponent } from './ruleset-overview/ruleset-overview.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { DataListComponent } from './data-list/data-list.component';
     ColumnInfoComponent,
     DataOverviewComponent,
     DataListComponent,
+    SelectCaseForAnalysisComponent,
+    RulesetOverviewComponent,
   ],
   imports: [
     BrowserModule,

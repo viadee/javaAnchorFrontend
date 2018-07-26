@@ -1,13 +1,11 @@
 import {RouterModule, Routes} from '@angular/router';
-import {SelectModelComponent} from './select-model/select-model.component';
 import {DataOverviewComponent} from './data-overview/data-overview.component';
-import {ColumnInfoComponent} from './column-info/column-info.component';
+import {RulesetOverviewComponent} from './ruleset-overview/ruleset-overview.component';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'data-overview', pathMatch: 'full'},
-  {path: 'select-model', component: SelectModelComponent},
   {path: 'data-overview', component: DataOverviewComponent},
-  {path: 'column-info', component: ColumnInfoComponent}
+  {path: 'ruleset-overview', component: RulesetOverviewComponent},
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);
