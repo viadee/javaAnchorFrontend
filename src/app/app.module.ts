@@ -11,6 +11,7 @@ import { DataOverviewComponent } from './data-overview/data-overview.component';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
+import { DataListComponent } from './data-list/data-list.component';
 
 registerLocaleData(localeDe, 'de');
 
@@ -20,6 +21,7 @@ registerLocaleData(localeDe, 'de');
     SelectModelComponent,
     ColumnInfoComponent,
     DataOverviewComponent,
+    DataListComponent,
   ],
   imports: [
     BrowserModule,

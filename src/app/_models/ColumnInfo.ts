@@ -1,8 +1,8 @@
 import {CategoryFreq} from './CategoryFreq';
 
 export interface ColumnInfo {
-  frame_id: String;
-  label: String;
+  frame_id: string;
+  label: string;
   column_min: number;
   column_max: number;
   mean: number;

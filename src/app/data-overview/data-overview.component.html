@@ -3,6 +3,9 @@
     <app-select-model (connectionInfo)="selectedConnection($event)"></app-select-model>
   </div>
   <div class="col-12">
-    <app-column-info [columns]="columns"></app-column-info>
+    <app-column-info [columns]="columns" *ngIf="columns !== undefined"></app-column-info>
+  </div>
+  <div class="col-12">
+    <app-data-list [columns]="columns" *ngIf="columns !== undefined"></app-data-list>
   </div>
 </div>
