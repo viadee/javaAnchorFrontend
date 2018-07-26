@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container-fluid">
   <div class=" card-deck">
-    <div class="col-lg-3" *ngFor="let column of columns">
+    <div class="col-xl-3 col-lg-4  col-md-6 col-sm-6" *ngFor="let column of columns">
       <div class="card box-shadow mx-0 my-2">
         <div class="card-header">
           <h4 class="font-weight-normal">{{ column.label }}</h4>
@@ -16,22 +16,22 @@
 
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Min</td>
-              <td class="text-right">{{ column.column_min | number:'1.0-2':'de' }}</td>
+              <td class="text-right">{{ column.column_min | number:'1.0-2' }}</td>
             </tr>
 
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Max</td>
-              <td class="text-right">{{ column.column_max | number:'1.0-2':'de' }}</td>
+              <td class="text-right">{{ column.column_max | number:'1.0-2' }}</td>
             </tr>
 
             <tr>
               <td>Missing</td>
-              <td class="text-right">{{ column.missing_count | number:'1.0-2':'de' }}</td>
+              <td class="text-right">{{ column.missing_count | number:'1.0-2' }}</td>
             </tr>
 
             <tr *ngIf="column.column_type !== 'enum'">
               <td>Mean</td>
-              <td class="text-right">{{ column.mean | number:'1.0-2':'de' }}</td>
+              <td class="text-right">{{ column.mean | number:'1.0-2' }}</td>
             </tr>
 
             <tr *ngIf="column.column_type === 'enum'">
@@ -52,13 +52,13 @@
                     <tbody>
                     <tr *ngFor="let cat of column.categories" class="cat-row">
                       <td>{{cat.name}}</td>
-                      <td class="text-right">{{ cat.freq | number:'1.0-4':'de' }}</td>
+                      <td class="text-right">{{ cat.freq | number:'1.0-4' }}</td>
                     </tr>
                     </tbody>
                   </table>
                 </div>
                 <!--<select data-live-search="true">-->
-                <!--<option *ngFor="let cat of column.categories">{{ cat.name }}:{{ cat.freq | number:'1.0-4':'de' }}-->
+                <!--<option *ngFor="let cat of column.categories">{{ cat.name }}:{{ cat.freq | number:'1.0-4' }}-->
                 <!--</option>-->
                 <!--</select>-->
               </td>

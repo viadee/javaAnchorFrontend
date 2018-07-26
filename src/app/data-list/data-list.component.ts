@@ -39,12 +39,6 @@ export class DataListComponent implements OnInit {
   //     },
   //     name: {
   //       title: 'Full Name'
-  //     },
-  //     username: {
-  //       title: 'User Name'
-  //     },
-  //     email: {
-  //       title: 'Email'
   //     }
   //   }
   // };
@@ -63,10 +57,14 @@ export class DataListComponent implements OnInit {
       && columns[0].data !== undefined && columns[0].data !== null && columns[0].data.length > 0) {
 
       const columnSettings: DynamicObject = {};
-      columns.forEach((columnInfo: ColumnInfo) => {
-        const label = columnInfo.label;
-        columnSettings[label] = new TableColumnSettings(label);
-      });
+
+
+      for (let i = 0; i < 2; i++) {
+        columns.forEach((columnInfo: ColumnInfo) => {
+          const label = columnInfo.label;
+          columnSettings[label + i] = new TableColumnSettings(label);
+        });
+      }
 
       this.settings = new TableSettings(columnSettings);
 
@@ -74,8 +72,11 @@ export class DataListComponent implements OnInit {
 
       for (let i = 0; i < columns[0].data.length; i++) {
         const row: DynamicObject = {};
-        for (const column of columns) {
-          row[column.label] = column.data[i];
+
+        for (let i = 0; i < 2; i++) {
+          columns.forEach((column: ColumnInfo) => {
+            row[column.label + i] = column.data[i];
+          });
         }
 
         data.push(row);
