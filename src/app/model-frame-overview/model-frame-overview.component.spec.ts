@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataOverviewComponent } from './data-overview.component';
+import { ModelFrameOverviewComponent } from './model-frame-overview.component';
 
-describe('DataOverviewComponent', () => {
-  let component: DataOverviewComponent;
-  let fixture: ComponentFixture<DataOverviewComponent>;
+describe('ModelFrameOverviewComponent', () => {
+  let component: ModelFrameOverviewComponent;
+  let fixture: ComponentFixture<ModelFrameOverviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataOverviewComponent ]
+      declarations: [ ModelFrameOverviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataOverviewComponent);
+    fixture = TestBed.createComponent(ModelFrameOverviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

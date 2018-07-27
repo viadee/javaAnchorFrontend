@@ -58,7 +58,6 @@ export class DataListComponent implements OnInit {
 
       const columnSettings: DynamicObject = {};
 
-
       columns.forEach((columnInfo: ColumnInfo) => {
         const label = columnInfo.label;
         columnSettings[label] = new TableColumnSettings(label);

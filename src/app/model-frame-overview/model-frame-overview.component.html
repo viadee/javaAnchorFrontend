@@ -13,4 +13,10 @@
   <div>
     <app-select-case-for-analysis [columns]="columns" *ngIf="columns !== undefined"></app-select-case-for-analysis>
   </div>
+  <div class="container">
+    <div class="float-right">
+      <a routerLink="/ruleset-overview" class="btn btn-danger" *ngIf="columns !== undefined"
+         [queryParams]="{server: connectionInfo.server, model_id: connectionInfo.model.model_id, frame_id: connectionInfo.frame.frame_id}">Shuffle</a>
+    </div>
+  </div>
 </div>
