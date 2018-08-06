@@ -41,7 +41,11 @@ export class H2oApiService {
   }
 
   getDataFrame(h2oInstance: string, frame_id: string): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/frames/` + frame_id, this.getHttpOptions(h2oInstance));
+    return this.http.get<any>(`${this.API_URL}/frames/${frame_id}`, this.getHttpOptions(h2oInstance));
+  }
+
+  getRandomRule(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {
+    return this.http.get(`${this.API_URL}/rule/${model_id}/${frame_id}`, this.getHttpOptions(h2oInstance));
   }
 
   private getHttpOptions(h2oInstance: string) {

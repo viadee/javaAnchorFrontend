@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RulesetOverviewComponent } from './ruleset-overview.component';
+import { RuleSetOverviewComponent } from './rule-set-overview.component';
 
-describe('RulesetOverviewComponent', () => {
-  let component: RulesetOverviewComponent;
-  let fixture: ComponentFixture<RulesetOverviewComponent>;
+describe('RuleSetOverviewComponent', () => {
+  let component: RuleSetOverviewComponent;
+  let fixture: ComponentFixture<RuleSetOverviewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RulesetOverviewComponent ]
+      declarations: [ RuleSetOverviewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RulesetOverviewComponent);
+    fixture = TestBed.createComponent(RuleSetOverviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

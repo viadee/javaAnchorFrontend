@@ -32,7 +32,6 @@ export class SelectModelComponent implements OnInit {
   }
 
   public loadModelsAndFrames(event) {
-    console.log('loadModelsAndFrames: ' + event + '; instance: ' + this.selectedInstance);
     this.models = null;
     this.frames = null;
 
@@ -50,6 +49,10 @@ export class SelectModelComponent implements OnInit {
     this._h2oApi
       .getModels(this.selectedInstance).subscribe((data) => {
       this.models = JSON.parse(data);
+      if (this.models == null) {
+        const no_models_available = new Model(null, 'no models available', null, null);
+        this.models = [no_models_available];
+      }
     });
   }
 
@@ -57,6 +60,10 @@ export class SelectModelComponent implements OnInit {
     this._h2oApi
       .getDataFrames(this.selectedInstance).subscribe((data) => {
       this.frames = JSON.parse(data);
+      if (this.frames == null) {
+        const no_frame_available = new DataFrame(null, 'no models available', null);
+        this.frames = [no_frame_available];
+      }
     });
   }
 

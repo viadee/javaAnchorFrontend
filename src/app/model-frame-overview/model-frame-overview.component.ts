@@ -28,12 +28,5 @@ export class ModelFrameOverviewComponent implements OnInit {
         this.columns = JSON.parse(data);
       });
   }
-  //
-  // public onSubmit() {
-  //   const extras: NavigationExtras = {
-  //     queryParams: {'connection-info': this.connectionInfo}
-  //   };
-  //   this.router.navigate(['/model-frame-overview'], extras);
-  // }
 
 }
