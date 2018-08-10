@@ -27,6 +27,7 @@ export class SelectModelComponent implements OnInit {
   @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
 
   ngOnInit() {
+    this.h2oInstances.push('local');
     this.h2oInstances.push('http://localhost:54321');
     this.h2oInstances.push('http://192.168.42.28:54321');
   }
