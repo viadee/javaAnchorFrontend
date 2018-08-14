@@ -25,7 +25,7 @@ export class H2oApiService {
   }
 
   tryConnect(h2oInstance: string) {
-    return this.http.get(`${this.API_URL}/try_connect`, this.getHttpOptions(h2oInstance))
+    return this.http.get(`${this.API_URL}/${encodeURIComponent(h2oInstance)}/try_connect`, this.getHttpOptions())
       .pipe(
         tap(try_connect => console.log('tryConnect: ' + try_connect)),
         catchError(this.handleError('tryConnect', []))
@@ -33,25 +33,24 @@ export class H2oApiService {
   }
 
   getModels(h2oInstance: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/models`, this.getHttpOptions(h2oInstance));
+    return this.http.get(`${this.API_URL}/${h2oInstance}/models`, this.getHttpOptions());
   }
 
   getDataFrames(h2oInstance: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/frames`, this.getHttpOptions(h2oInstance));
+    return this.http.get(`${this.API_URL}/${h2oInstance}/frames`, this.getHttpOptions());
   }
 
   getDataFrame(h2oInstance: string, frame_id: string): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/frames/${frame_id}`, this.getHttpOptions(h2oInstance));
+    return this.http.get<any>(`${this.API_URL}/${h2oInstance}/frames/${frame_id}`, this.getHttpOptions());
   }
 
   getRandomRule(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/rule/${model_id}/${frame_id}`, this.getHttpOptions(h2oInstance));
+    return this.http.get(`${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`, this.getHttpOptions());
   }
 
-  private getHttpOptions(h2oInstance: string) {
+  private getHttpOptions() {
     return {
       headers: new HttpHeaders({
-        'h2o_instance': h2oInstance
       })
     };
   }
