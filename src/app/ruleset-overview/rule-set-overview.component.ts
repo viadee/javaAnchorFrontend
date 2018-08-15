@@ -22,6 +22,7 @@ export class RuleSetOverviewComponent implements OnInit {
   rules: Array<Rule> = [];
 
   public source: LocalDataSource;
+
   settings = {
     columns: {
       prediction: {
