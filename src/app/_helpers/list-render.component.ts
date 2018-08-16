@@ -9,7 +9,7 @@ import {ViewCell} from 'ng2-smart-table';
 @Component({
   template: `
     <div>
-      <ul style="list-style-type: None">
+      <ul style="list-style-type: None; margin: 0; padding: 0;">
         <li *ngFor="let item of value">{{ item }}</li>
       </ul>
     </div>

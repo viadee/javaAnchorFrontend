@@ -13,8 +13,6 @@ import {LocalDataSource} from 'ng2-smart-table';
 })
 export class RuleSetOverviewComponent implements OnInit {
 
-  connectionInfo: ConnectionInfo;
-
   server: string;
   model_id: string;
   frame_id: string;
@@ -28,14 +26,14 @@ export class RuleSetOverviewComponent implements OnInit {
       prediction: {
         title: 'Prediction'
       },
-      coverage: {
-        title: 'Coverage'
-      },
       precision: {
         title: 'Precicsion'
       },
+      coverage: {
+        title: 'Coverage'
+      },
       names: {
-        title: 'Names',
+        title: 'Rule',
         filter: false,
         type: 'custom',
         renderComponent: ListRenderComponent,
