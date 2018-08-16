@@ -4,8 +4,8 @@ import {DataFrame} from './DataFrame';
 export class ConnectionInfo {
   constructor(
     public server: string,
-    public model: Model,
-    public frame: DataFrame) {
+    public modelId: string,
+    public frameId: string) {
 
   }
 }

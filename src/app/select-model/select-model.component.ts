@@ -1,8 +1,10 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {Model} from '../_models/Model';
 import {DataFrame} from '../_models/DataFrame';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
+import {FormControl, FormGroup} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -12,64 +14,144 @@ import {ConnectionInfo} from '../_models/ConnectionInfo';
 })
 export class SelectModelComponent implements OnInit {
 
-  constructor(private _h2oApi: H2oApiService) {
+  paramServer;
+  paramModelId;
+  paramFrameId;
+
+  constructor(private _router: Router,
+              private _route: ActivatedRoute,
+              private _h2oApi: H2oApiService) {
+    _route.queryParams.forEach(value => {
+      if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
+        this.paramServer = value.server;
+        this.paramModelId = value.model_id;
+        this.paramFrameId = value.frame_id;
+      } else {
+        // TODO fehler anzeigen oder auf die andere Seite zurückschicken
+      }
+    });
   }
 
-  h2oInstances: String[] = [];
-  selectedInstance: string;
+  modelForm: FormGroup;
 
+  servers: String[] = [];
   models: Model[];
-  selectedModel: Model;
-
   frames: DataFrame[];
-  selectedFrame: DataFrame;
 
   @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
 
   ngOnInit() {
-    this.h2oInstances.push('local');
-    this.h2oInstances.push('local-H2O');
-    this.h2oInstances.push('http://192.168.42.28:54321');
+    this.servers.push('local');
+    this.servers.push('local-H2O');
+    this.modelForm = new FormGroup({
+      server: new FormControl(this.paramServer),
+      model: new FormControl({value: '', disabled: true}),
+      frame: new FormControl({value: '', disabled: true})
+    });
+
+    if (this.paramServer !== undefined && this.paramServer !== null) {
+      this.loadModels();
+      this.loadFrames();
+    }
   }
+
+  // updatePathParams() {
+  //   // changes the route without moving from the current view or
+  //   // triggering a navigation event
+  //   this._router.navigate([], {
+  //     relativeTo: this._route,
+  //     queryParams: {
+  //       server: this.getServer(),
+  //       model_id: this.getModel().model_id,
+  //       frame_id: this.getFrame().frame_id
+  //     },
+  //     // preserve the existing query params in the route
+  //     queryParamsHandling: 'merge',
+  //     // do not trigger navigation
+  //     skipLocationChange: true
+  //   });
+  // }
 
   public loadModelsAndFrames(event) {
     this.models = null;
     this.frames = null;
 
-    this._h2oApi.tryConnect(this.selectedInstance).subscribe((canConnect: any) => {
+    this._h2oApi.tryConnect(this.getServer()).subscribe((canConnect: any) => {
       if (JSON.parse(canConnect)['can_connect'] === true) {
-        this.getModels();
-        this.getFrames();
+        this.loadModels();
+        this.loadFrames();
       } else {
         // TODO fehler anzeigen
       }
     });
   }
 
-  public getModels() {
+  public modelSelectionChanged(event) {
+    this.setFrame(this.getModel().data_frame);
+  }
+
+  public loadModels() {
     this._h2oApi
-      .getModels(this.selectedInstance).subscribe((data) => {
+      .getModels(this.getServer()).subscribe((data) => {
       this.models = JSON.parse(data);
       if (this.models == null) {
         const no_models_available = new Model(null, 'no models available', null, null);
         this.models = [no_models_available];
+      } else {
+        this.modelForm.controls.model.enable();
+        if (this.paramModelId !== null) {
+          for (const model of this.models) {
+            if (model.model_id === this.paramModelId) {
+              this.setModel(model);
+            }
+          }
+        }
       }
     });
   }
 
-  public getFrames() {
+  public loadFrames() {
     this._h2oApi
-      .getDataFrames(this.selectedInstance).subscribe((data) => {
+      .getDataFrames(this.getServer()).subscribe((data) => {
       this.frames = JSON.parse(data);
       if (this.frames == null) {
         const no_frame_available = new DataFrame(null, 'no models available', null);
         this.frames = [no_frame_available];
+      } else {
+        this.modelForm.controls.frame.enable();
+        if (this.paramFrameId !== null) {
+          for (const frame of this.frames) {
+            if (frame.frame_id === this.paramFrameId) {
+              this.setFrame(frame);
+            }
+          }
+        }
       }
     });
   }
 
-  public onSubmit() {
-    this.connectionInfo.emit(new ConnectionInfo(this.selectedInstance, this.selectedModel, this.selectedFrame));
+  // public onSubmit() {
+  //   this.connectionInfo.emit(new ConnectionInfo(this.getServer(), this.getModel(), this.getFrame()));
+  // }
+
+  private getServer() {
+    return this.modelForm.controls.server.value;
+  }
+
+  private getModel() {
+    return this.modelForm.controls.model.value;
+  }
+
+  private setModel(model: Model) {
+    this.modelForm.controls.model.setValue(model, {onlySelf: true});
+  }
+
+  private getFrame() {
+    return this.modelForm.controls.frame.value;
+  }
+
+  private setFrame(frame: DataFrame) {
+    this.modelForm.controls.frame.setValue(frame, {onlySelf: true});
   }
 
 }
