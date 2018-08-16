@@ -55,23 +55,6 @@ export class SelectModelComponent implements OnInit {
     }
   }
 
-  // updatePathParams() {
-  //   // changes the route without moving from the current view or
-  //   // triggering a navigation event
-  //   this._router.navigate([], {
-  //     relativeTo: this._route,
-  //     queryParams: {
-  //       server: this.getServer(),
-  //       model_id: this.getModel().model_id,
-  //       frame_id: this.getFrame().frame_id
-  //     },
-  //     // preserve the existing query params in the route
-  //     queryParamsHandling: 'merge',
-  //     // do not trigger navigation
-  //     skipLocationChange: true
-  //   });
-  // }
-
   public loadModelsAndFrames(event) {
     this.models = null;
     this.frames = null;
@@ -129,10 +112,6 @@ export class SelectModelComponent implements OnInit {
       }
     });
   }
-
-  // public onSubmit() {
-  //   this.connectionInfo.emit(new ConnectionInfo(this.getServer(), this.getModel(), this.getFrame()));
-  // }
 
   private getServer() {
     return this.modelForm.controls.server.value;
