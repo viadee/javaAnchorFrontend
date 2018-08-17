@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ColumnInfo} from '../_models/ColumnInfo';
+import {LocalDataSource} from 'ng2-smart-table';
 
 interface DynamicObject {
   [key: string]: any;
@@ -25,11 +26,12 @@ class TableColumnSettings implements DynamicObject {
 export class DataListComponent implements OnInit {
 
   constructor() {
+    this.source = new LocalDataSource();
   }
 
   private _columns: ColumnInfo[];
 
-  data: DynamicObject[];
+  public source: LocalDataSource;
 
   settings: TableSettings;
   // settings = {
@@ -77,7 +79,7 @@ export class DataListComponent implements OnInit {
         data.push(row);
       }
 
-      this.data = data;
+      this.source.load(data);
     }
 
   }

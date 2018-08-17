@@ -6,7 +6,7 @@ export class Model {
     public model_id: string,
     public name: string,
     public url: string,
-    public data_frame: DataFrame[]) {
+    public data_frame: DataFrame) {
 
   }
 }

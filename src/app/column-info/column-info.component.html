@@ -14,14 +14,19 @@
               <td class="text-right">{{ column.column_type }}</td>
             </tr>
 
-            <tr *ngIf="column.column_type !== 'enum'">
+            <tr *ngIf="!['enum', 'string'].includes(column.column_type)">
               <td>Min</td>
               <td class="text-right">{{ column.column_min | number:'1.0-2' }}</td>
             </tr>
 
-            <tr *ngIf="column.column_type !== 'enum'">
+            <tr *ngIf="!['enum', 'string'].includes(column.column_type)">
               <td>Max</td>
               <td class="text-right">{{ column.column_max | number:'1.0-2' }}</td>
+            </tr>
+
+            <tr *ngIf="!['enum', 'string'].includes(column.column_type)">
+              <td>Mean</td>
+              <td class="text-right">{{ column.mean | number:'1.0-2' }}</td>
             </tr>
 
             <tr>
@@ -29,14 +34,9 @@
               <td class="text-right">{{ column.missing_count | number:'1.0-2' }}</td>
             </tr>
 
-            <tr *ngIf="column.column_type !== 'enum'">
-              <td>Mean</td>
-              <td class="text-right">{{ column.mean | number:'1.0-2' }}</td>
-            </tr>
-
-            <tr *ngIf="column.column_type === 'enum'">
+            <tr *ngIf="['enum', 'string'].includes(column.column_type)">
               <td>Unique</td>
-              <td class="text-right"></td>
+              <td class="text-right">{{ column.unique }}</td>
             </tr>
 
             <tr *ngIf="column.column_type === 'enum'">

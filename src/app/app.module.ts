@@ -12,8 +12,12 @@ import { DataListComponent } from './data-list/data-list.component';
 import { SelectCaseForAnalysisComponent } from './select-case-for-analysis/select-case-for-analysis.component';
 import { RuleSetOverviewComponent } from './ruleset-overview/rule-set-overview.component';
 import { ModelFrameOverviewComponent } from './model-frame-overview/model-frame-overview.component';
+import {ListRenderComponent} from './_helpers/list-render.component';
 
 @NgModule({
+  entryComponents: [
+    ListRenderComponent,
+  ],
   declarations: [
     AppComponent,
     SelectModelComponent,
@@ -22,6 +26,7 @@ import { ModelFrameOverviewComponent } from './model-frame-overview/model-frame-
     SelectCaseForAnalysisComponent,
     RuleSetOverviewComponent,
     ModelFrameOverviewComponent,
+    ListRenderComponent,
   ],
   imports: [
     BrowserModule,

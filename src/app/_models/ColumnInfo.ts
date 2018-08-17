@@ -10,6 +10,7 @@ export interface ColumnInfo {
   missing_count: number;
   data: Array<any>;
   categories: CategoryFreq[];
+  unique: number;
 } {
 
 }
