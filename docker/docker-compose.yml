@@ -1,0 +1,16 @@
+version: '3'
+services:
+  # proxy:
+    # build: ./nginx
+    # container_name: "proxy"
+    # ports:
+    #   - "8080:8080"
+    # volumes:
+    #   - ../:/var/www/bachelor/
+  web:
+    build: ./web
+    container_name: "anchor-web"
+    ports:
+      - "8080:4200"
+    volumes:
+      - ../:/var/www/bachelor/
