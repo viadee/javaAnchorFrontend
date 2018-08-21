@@ -70,7 +70,9 @@ export class SelectModelComponent implements OnInit {
   }
 
   public modelSelectionChanged(event) {
-    this.setFrame(this.getModel().data_frame);
+    if (this.frames.includes(this.getModel().data_frame)) {
+      this.setFrame(this.getModel().data_frame);
+    }
   }
 
   public loadModels() {
@@ -82,7 +84,7 @@ export class SelectModelComponent implements OnInit {
         this.models = [no_models_available];
       } else {
         this.modelForm.controls.model.enable();
-        if (this.paramModelId !== null) {
+        if (this.paramModelId !== undefined) {
           for (const model of this.models) {
             if (model.model_id === this.paramModelId) {
               this.setModel(model);

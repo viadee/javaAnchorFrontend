@@ -13,6 +13,8 @@ import { SelectCaseForAnalysisComponent } from './select-case-for-analysis/selec
 import { RuleSetOverviewComponent } from './ruleset-overview/rule-set-overview.component';
 import { ModelFrameOverviewComponent } from './model-frame-overview/model-frame-overview.component';
 import {ListRenderComponent} from './_helpers/list-render.component';
+import { SafeNumberPipe } from './_helpers/safe-number.pipe';
+import {DecimalPipe} from '@angular/common';
 
 @NgModule({
   entryComponents: [
@@ -27,6 +29,7 @@ import {ListRenderComponent} from './_helpers/list-render.component';
     RuleSetOverviewComponent,
     ModelFrameOverviewComponent,
     ListRenderComponent,
+    SafeNumberPipe,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,7 @@ import {ListRenderComponent} from './_helpers/list-render.component';
     // ChartsModule,
     routing
   ],
-  providers: [],
+  providers: [DecimalPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
