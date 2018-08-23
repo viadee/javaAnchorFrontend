@@ -63,8 +63,6 @@ export class RuleSetOverviewComponent implements OnInit {
         this.server = value.server;
         this.model_id = value.model_id;
         this.frame_id = value.frame_id;
-
-        this.loadRandom();
       } else {
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken
       }
