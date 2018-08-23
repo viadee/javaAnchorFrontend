@@ -50,8 +50,8 @@ export class H2oApiService {
 
   private getHttpOptions() {
     return {
-      headers: new HttpHeaders({
-      })
+      withCredentials: true,
+      headers: new HttpHeaders({}),
     };
   }
 
