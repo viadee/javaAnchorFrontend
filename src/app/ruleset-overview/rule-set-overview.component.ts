@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {Rule} from '../_models/Rule';
 import {ListRenderComponent} from '../_helpers/list-render.component';
 import {LocalDataSource} from 'ng2-smart-table';
+import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 
 @Component({
   selector: 'app-ruleset-overview',
@@ -58,7 +58,9 @@ export class RuleSetOverviewComponent implements OnInit {
     },
   };
 
-  constructor(private route: ActivatedRoute, private _h2oApi: H2oApiService) {
+  constructor(private route: ActivatedRoute,
+              private _h2oApi: H2oApiService,
+              private _globals: GlobalVariablesComponent) {
     this.source = new LocalDataSource();
 
     route.queryParams.forEach(value => {
@@ -86,6 +88,35 @@ export class RuleSetOverviewComponent implements OnInit {
       console.log(rule);
       this.source.load(this.rules);
     });
+  }
+
+  private computeSearchConditions() {
+    const conditions = {};
+    const columns = this._globals.getFrameSummary().column_summary_list;
+    for (const column of columns) {
+      const columnConditions: string[] = [];
+      if (['enum', 'string'].includes(column.column_type)) {
+        for (const cat of column.categories) {
+          columnConditions.push(`${column.label} = ${cat.name}`);
+        }
+      } else {
+        const buckets = 4;
+        const min = column.column_min;
+        const max = column.column_max;
+        const step = (max - min) / buckets;
+
+        for (let i = 0; i < buckets; i++) {
+          if (i === 0) {
+            columnConditions.push(`${column.label} < ${min + step}`)
+          } else if (i === buckets - 1) {
+            columnConditions.push(`${min + i * step} < ${column.label}`)
+          } else {
+            columnConditions.push(`${min + i * step} <= ${column.label} <= ${min + (i + 1) * step}`)
+          }
+        }
+      }
+      conditions[column.label] = columnConditions;
+    }
   }
 
 }
