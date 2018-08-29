@@ -7,15 +7,24 @@
   <div class="col-12">
     <app-select-model (connectionInfo)="selectedConnection($event)"></app-select-model>
   </div>
+  <div class="row" *ngIf="frameSummary !== undefined">
+    <div class="col-3">
+      <label>Frame-Id:&nbsp;</label>{{ frameSummary.frame_id }}
+    </div>
+    <div class="col-2">
+      <label>Rows:&nbsp;</label>{{ frameSummary.row_count }}
+    </div>
+  </div>
   <div class="col-12">
-    <app-column-info [columns]="columns" *ngIf="columns !== undefined"></app-column-info>
+    <app-column-info [columns]="frameSummary.column_summary_list" *ngIf="frameSummary !== undefined"></app-column-info>
   </div>
   <div>
-    <app-select-case-for-analysis [columns]="columns" *ngIf="columns !== undefined"></app-select-case-for-analysis>
+    <app-select-case-for-analysis [columns]="frameSummary.column_summary_list"
+                                  *ngIf="frameSummary !== undefined"></app-select-case-for-analysis>
   </div>
   <div class="container">
     <div class="float-right">
-      <a routerLink="/ruleset-overview" class="btn btn-danger" *ngIf="columns !== undefined"
+      <a routerLink="/ruleset-overview" class="btn btn-danger" *ngIf="frameSummary !== undefined"
          [queryParams]="{server: connectionInfo.server, model_id: connectionInfo.modelId, frame_id: connectionInfo.frameId}">Analyse</a>
     </div>
   </div>

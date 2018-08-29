@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ColumnInfo} from '../_models/ColumnInfo';
+import {ColumnSummary} from '../_models/ColumnSummary';
 
 
 @Component({
@@ -9,7 +9,7 @@ import {ColumnInfo} from '../_models/ColumnInfo';
 })
 export class ColumnInfoComponent implements OnInit {
 
-  @Input() columns: ColumnInfo[];
+  @Input() columns: ColumnSummary[];
 
   constructor() {
   }
