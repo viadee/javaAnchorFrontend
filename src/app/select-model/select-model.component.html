@@ -14,7 +14,7 @@
         <div class="form-group">
           <label for="model">Select Model:</label>
           <select class="form-control" id="model" formControlName="model" (change)="modelSelectionChanged($event)">
-            <option *ngFor="let model of models" [ngValue]="model" [selected]="getModel()">{{model.name}}</option>
+            <option *ngFor="let model of models" [ngValue]="model" [selected]="model === getModel()">{{model.name}}</option>
           </select>
         </div>
       </div>
@@ -22,7 +22,7 @@
         <div class="form-group">
           <label for="frame">Select Frame:</label>
           <select class="form-control" id="frame" formControlName="frame">
-            <option *ngFor="let frame of frames" [ngValue]="frame" [selected]="getFrame()">{{ frame.name }}</option>
+            <option *ngFor="let frame of frames" [ngValue]="frame" [selected]="frame === getFrame()">{{ frame.name }}</option>
           </select>
         </div>
       </div>

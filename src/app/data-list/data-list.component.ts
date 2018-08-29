@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ColumnInfo} from '../_models/ColumnInfo';
+import {ColumnSummary} from '../_models/ColumnSummary';
 import {LocalDataSource} from 'ng2-smart-table';
 
 interface DynamicObject {
@@ -29,7 +29,7 @@ export class DataListComponent implements OnInit {
     this.source = new LocalDataSource();
   }
 
-  private _columns: ColumnInfo[];
+  private _columns: ColumnSummary[];
 
   public source: LocalDataSource;
 
@@ -48,19 +48,19 @@ export class DataListComponent implements OnInit {
   ngOnInit() {
   }
 
-  get columns(): ColumnInfo[] {
+  get columns(): ColumnSummary[] {
     return this._columns;
   }
 
   @Input()
-  set columns(columns: ColumnInfo[]) {
+  set columns(columns: ColumnSummary[]) {
     this._columns = columns;
     if (columns !== undefined && columns !== null && columns.length > 0
       && columns[0].data !== undefined && columns[0].data !== null && columns[0].data.length > 0) {
 
       const columnSettings: DynamicObject = {};
 
-      columns.forEach((columnInfo: ColumnInfo) => {
+      columns.forEach((columnInfo: ColumnSummary) => {
         const label = columnInfo.label;
         columnSettings[label] = new TableColumnSettings(label);
       });
@@ -72,7 +72,7 @@ export class DataListComponent implements OnInit {
       for (let i = 0; i < columns[0].data.length; i++) {
         const row: DynamicObject = {};
 
-        columns.forEach((column: ColumnInfo) => {
+        columns.forEach((column: ColumnSummary) => {
           row[column.label] = column.data[i];
         });
 

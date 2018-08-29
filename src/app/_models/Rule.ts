@@ -5,6 +5,7 @@ export interface Rule {
   names: Array<string>;
   precision: number;
   prediction: any;
+  affected_rows: number;
 } {
 
 }

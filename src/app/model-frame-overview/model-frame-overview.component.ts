@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
-import {ColumnInfo} from '../_models/ColumnInfo';
+import {ColumnSummary} from '../_models/ColumnSummary';
 import {ActivatedRoute, Router} from '@angular/router';
+import {FrameSummary} from '../_models/FrameSummary';
 
 @Component({
   selector: 'app-model-frame-overview',
@@ -25,7 +26,7 @@ export class ModelFrameOverviewComponent implements OnInit {
 
   connectionInfo: ConnectionInfo;
 
-  columns: ColumnInfo[];
+  frameSummary: FrameSummary;
 
   ngOnInit() {
   }
@@ -35,7 +36,7 @@ export class ModelFrameOverviewComponent implements OnInit {
     this._h2oApi
       .getDataFrame(this.connectionInfo.server, this.connectionInfo.frameId)
       .subscribe(data => {
-        this.columns = JSON.parse(data);
+        this.frameSummary = JSON.parse(data);
       });
   }
 

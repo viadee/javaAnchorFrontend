@@ -1,6 +1,6 @@
 import {CategoryFreq} from './CategoryFreq';
 
-export interface ColumnInfo {
+export interface ColumnSummary {
   frame_id: string;
   label: string;
   column_min: number;

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ColumnInfo} from '../_models/ColumnInfo';
+import {ColumnSummary} from '../_models/ColumnSummary';
 
 @Component({
   selector: 'app-select-case-for-analysis',
@@ -8,7 +8,7 @@ import {ColumnInfo} from '../_models/ColumnInfo';
 })
 export class SelectCaseForAnalysisComponent implements OnInit {
 
-  @Input() columns: ColumnInfo[];
+  @Input() columns: ColumnSummary[];
 
   constructor() {
   }
