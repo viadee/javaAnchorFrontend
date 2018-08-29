@@ -32,6 +32,9 @@ export class RuleSetOverviewComponent implements OnInit {
       coverage: {
         title: 'Coverage'
       },
+      affected_rows: {
+        title: 'Cases'
+      },
       names: {
         title: 'Rule',
         filter: false,
