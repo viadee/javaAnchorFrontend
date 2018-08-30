@@ -1,4 +1,5 @@
 <div class="container-fluid">
+  <div class="col-10">
   <ng2-smart-table [settings]="settings" [source]="source" class="table-responsive"></ng2-smart-table>
 
   <form #ruleSet="ngForm" (ngSubmit)="onSubmit()">
@@ -7,8 +8,14 @@
         <button type="submit" class="btn btn-success">Rule with random case selection</button>
       </div>
       <div class="float-right mr-2">
-        <button type="submit" class="btn btn-success">Select case</button>
+        <a class="btn btn-success" [routerLink]="[ {outlets: { modal: 'select-conditions' } } ]"
+           [queryParams]="{server: server, model_id: model_id, frame_id: frame_id}">Select case by conditions</a>
+        <!--<button class="btn btn-success">Select case by conditions</button>-->
       </div>
     </div>
   </form>
+  </div>
+  <div class="col-2">
+    <app-case-condition-select [frameSummary]="frameSummary"></app-case-condition-select>
+  </div>
 </div>

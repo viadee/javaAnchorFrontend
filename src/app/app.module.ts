@@ -16,6 +16,7 @@ import {ListRenderComponent} from './_helpers/list-render.component';
 import {SafeNumberPipe} from './_helpers/safe-number.pipe';
 import {DecimalPipe} from '@angular/common';
 import {GlobalVariablesComponent} from './_helpers/global-variables.component';
+import { CaseConditionSelectComponent } from './case-condition-select/case-condition-select.component';
 
 @NgModule({
   entryComponents: [
@@ -31,6 +32,7 @@ import {GlobalVariablesComponent} from './_helpers/global-variables.component';
     ModelFrameOverviewComponent,
     ListRenderComponent,
     SafeNumberPipe,
+    CaseConditionSelectComponent,
   ],
   imports: [
     BrowserModule,
