@@ -48,6 +48,10 @@ export class H2oApiService {
     return this.http.get(`${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`, this.getHttpOptions());
   }
 
+  getCaseSelectConditions(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {
+    return this.http.get(`${this.API_URL}/${h2oInstance}/frames/${frame_id}/conditions`, this.getHttpOptions())
+  }
+
   private getHttpOptions() {
     return {
       withCredentials: true,

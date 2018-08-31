@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FrameSummary} from '../_models/FrameSummary';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-case-condition-select',
@@ -9,84 +8,58 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 })
 export class CaseConditionSelectComponent implements OnInit {
 
-  private _frameSummary: FrameSummary;
-  columnsConditions = new Map<string, [string]>();
+  private _columnsConditions: Map<string, Map<number, string>>;
 
-  selectForm: FormGroup = new FormGroup({});
+  columns: string[] = [];
+
+  selectForm = new FormGroup({});
 
   constructor() {
   }
 
   ngOnInit(): void {
-
   }
 
-  get frameSummary() {
-    return this._frameSummary;
-  }
+  getColumnsConditionsOf(column: string) {
+    const values = [];
+
+    for (const [key, val] of Object.entries(this._columnsConditions[column])) {
+      values.push({key: key, value: val});
+    }
+    return values;
+}
 
   @Input()
-  set frameSummary(frameSummary: FrameSummary) {
-    this._frameSummary = frameSummary;
-    if (this._frameSummary !== undefined && this._frameSummary !== null) {
+  set columnsConditions(columnsConditions: Map<string, Map<number, string>>) {
+    this._columnsConditions = columnsConditions;
 
-      const columnFormGroup: {
-        [key: string]: AbstractControl
-      } = {};
-      for (const column of this._frameSummary.column_summary_list) {
-        columnFormGroup[column.label] = new FormControl('');
+    if (this._columnsConditions !== undefined && this._columnsConditions !== null) {
+      this.columns = [];
+      for (const [key, val] of Object.entries(columnsConditions)) {
+        this.columns.push(key);
       }
 
-      this.selectForm = new FormGroup(columnFormGroup);
-      //   server: new FormControl(this.paramServer),
-      //   model: new FormControl({value: '', disabled: true}),
-      //   frame: new FormControl({value: '', disabled: true})
-      // });
-
-      this.computeSearchConditions();
+      for (const column of this.columns) {
+        this.selectForm.addControl(this.getIdForColumn(column), new FormControl(''));
+      }
     }
   }
 
-  getColumns() {
-    // const columns = new Array();
-    // this.columnsConditions.forEach(((value, key) => {
-    //   columns.push(key)
-    // }))
-    // for (const column of this.columnsConditions.keys()) {
-    //   columns.push(column.label);
-    // }
-    return Array.from(this.columnsConditions.keys());
+  private hashCode(column: string) {
+    let hash = 0, i, chr, len;
+    if (column.length === 0) {
+      return hash;
+    }
+    for (i = 0, len = column.length; i < len; i++) {
+      chr = column.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
   }
 
-  private computeSearchConditions() {
-    const conditions = new Map<string, [string]>();
-    const columns = this._frameSummary.column_summary_list;
-    for (const column of columns) {
-      const columnConditions: string[] = [];
-      if (['enum', 'string'].includes(column.column_type)) {
-        for (const cat of column.categories) {
-          columnConditions.push(`${column.label} = ${cat.name}`);
-        }
-      } else {
-        const buckets = 4;
-        const min = column.column_min;
-        const max = column.column_max;
-        const step = (max - min) / buckets;
-
-        for (let i = 0; i < buckets; i++) {
-          if (i === 0) {
-            columnConditions.push(`${column.label} < ${min + step}`);
-          } else if (i === buckets - 1) {
-            columnConditions.push(`${min + i * step} < ${column.label}`);
-          } else {
-            columnConditions.push(`${min + i * step} <= ${column.label} <= ${min + (i + 1) * step}`);
-          }
-        }
-      }
-      conditions[column.label] = columnConditions;
-    }
-
-    this.columnsConditions = conditions;
+  public getIdForColumn(column: string) {
+    return `select_${this.hashCode(column)}`;
   }
 
 }

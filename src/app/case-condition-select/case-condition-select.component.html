@@ -1,8 +1,10 @@
-<form [formGroup]="selectForm" *ngIf="columnsConditions !== null">
-  <div *ngFor="let column of getColumns()">
-    <label for="select_{{column}}">Select {{column}}:</label>
-    <select class="form-control" id="select_{{column}}" formControlName="select_{{column}}">
-      <option *ngFor="let condition of columnsConditions[column]" [ngValue]="condition">{{ condition }}</option>
-    </select>
-  </div>
-</form>
+<div class="container">
+  <form [formGroup]="selectForm" *ngIf="columns !== null">
+    <div *ngFor="let column of columns">
+      <label for="id_{{ getIdForColumn(column) }}">Select {{column}}:</label>
+      <select class="form-control" id="id_{{ getIdForColumn(column) }}" formControlName="{{ getIdForColumn(column) }}">
+        <option *ngFor="let condition of getColumnsConditionsOf(column)" [ngValue]="condition.key">{{ condition.value }}</option>
+      </select>
+    </div>
+  </form>
+</div>

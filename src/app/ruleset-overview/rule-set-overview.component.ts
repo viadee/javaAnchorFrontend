@@ -20,6 +20,8 @@ export class RuleSetOverviewComponent implements OnInit {
 
   frameSummary: FrameSummary;
 
+  columnsConditions: Map<string, Map<string, string>>;
+
   rules: Array<Rule> = [];
 
   public source: LocalDataSource;
@@ -79,6 +81,10 @@ export class RuleSetOverviewComponent implements OnInit {
             this._globals.setFrameSummary(this.frameSummary);
           });
         }
+
+        this._h2oApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(data => {
+          this.columnsConditions = JSON.parse(data);
+        })
       } else {
         this._router.navigate(['/model-frame-overview']);
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken
