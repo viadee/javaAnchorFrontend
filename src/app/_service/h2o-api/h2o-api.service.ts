@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {Model} from '../../_models/Model';
@@ -44,8 +44,16 @@ export class H2oApiService {
     return this.http.get<any>(`${this.API_URL}/${h2oInstance}/frames/${frame_id}`, this.getHttpOptions());
   }
 
-  getRandomRule(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`, this.getHttpOptions());
+  getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: Map<string, string>): Observable<any> {
+    let params = new HttpParams();
+    conditions.forEach((value: string, key: string) => {
+      params = params.append(key, value);
+    });
+
+    const options = this.getHttpOptions();
+    options['params'] = params;
+
+    return this.http.get(`${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`, options);
   }
 
   getCaseSelectConditions(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {

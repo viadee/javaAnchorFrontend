@@ -32,7 +32,7 @@ export class RuleSetOverviewComponent implements OnInit {
         title: 'Prediction'
       },
       precision: {
-        title: 'Precicsion'
+        title: 'Precision'
       },
       coverage: {
         title: 'Coverage'
@@ -95,16 +95,8 @@ export class RuleSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public onSubmit() {
-    this.loadRandom();
-  }
-
-  public selectWithConditions() {
-
-  }
-
-  private loadRandom() {
-    this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id).subscribe((data: any) => {
+  public requestAnalyzation(event: Map<string, string>) {
+    this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, event).subscribe((data: any) => {
       const rule = JSON.parse(data);
       this.rules.push(rule);
       this._globals.addRule(rule);

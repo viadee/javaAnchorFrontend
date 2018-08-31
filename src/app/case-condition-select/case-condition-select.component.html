@@ -1,9 +1,12 @@
 <div class="container">
-  <form [formGroup]="selectForm" *ngIf="columns !== null">
+  <form [formGroup]="selectForm" *ngIf="columns !== null" (ngSubmit)="onSubmit()">
+    <button type="submit" class="btn btn-success mt-2 mb-2 float-right">Start Analyzation</button>
     <div *ngFor="let column of columns">
       <label for="id_{{ getIdForColumn(column) }}">Select {{column}}:</label>
       <select class="form-control" id="id_{{ getIdForColumn(column) }}" formControlName="{{ getIdForColumn(column) }}">
-        <option *ngFor="let condition of getColumnsConditionsOf(column)" [ngValue]="condition.key">{{ condition.value }}</option>
+        <option *ngFor="let condition of getColumnsConditionsOf(column)"
+                [ngValue]="condition.key">{{ condition.value }}
+        </option>
       </select>
     </div>
   </form>

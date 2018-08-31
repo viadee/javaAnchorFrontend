@@ -3,21 +3,23 @@
     <div class="col-10">
       <ng2-smart-table [settings]="settings" [source]="source" class="table-responsive"></ng2-smart-table>
 
-      <form #ruleSet="ngForm" (ngSubmit)="onSubmit()">
-        <div class="form-group" style="margin-top: 30px">
-          <div class="float-right">
-            <button type="submit" class="btn btn-success">Rule with random case selection</button>
-          </div>
-          <div class="float-right mr-2">
-            <a class="btn btn-success" [routerLink]="[ {outlets: { modal: 'select-conditions' } } ]"
-               [queryParams]="{server: server, model_id: model_id, frame_id: frame_id}">Select case by conditions</a>
-            <!--<button class="btn btn-success">Select case by conditions</button>-->
-          </div>
-        </div>
-      </form>
+      <!--<form #ruleSet="ngForm" (ngSubmit)="onSubmit()">-->
+        <!--<div class="form-group" style="margin-top: 30px">-->
+          <!--<div class="float-right">-->
+            <!--<button type="submit" class="btn btn-success">Rule with random case selection</button>-->
+          <!--</div>-->
+          <!--<div class="float-right mr-2">-->
+            <!--<a class="btn btn-success" [routerLink]="[ {outlets: { modal: 'select-conditions' } } ]"-->
+               <!--[queryParams]="{server: server, model_id: model_id, frame_id: frame_id}">Select case by conditions</a>-->
+            <!--&lt;!&ndash;<button class="btn btn-success">Select case by conditions</button>&ndash;&gt;-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</form>-->
     </div>
     <div class="col-2">
-      <app-case-condition-select [columnsConditions]="columnsConditions"></app-case-condition-select>
+      <!--<button type="submit" class="btn btn-success">Rule with random case selection</button>-->
+      <app-case-condition-select [columnsConditions]="columnsConditions"
+      (selectedConditions)="requestAnalyzation($event)"></app-case-condition-select>
     </div>
   </div>
 </div>
