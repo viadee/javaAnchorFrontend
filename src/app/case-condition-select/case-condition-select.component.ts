@@ -36,7 +36,7 @@ export class CaseConditionSelectComponent {
       values.push({key: key, value: val});
     }
     return values;
-}
+  }
 
   @Input()
   set columnsConditions(columnsConditions: Map<string, Map<number, string>>) {
@@ -52,19 +52,6 @@ export class CaseConditionSelectComponent {
         this.selectForm.addControl(this.getIdForColumn(column), new FormControl(''));
       }
     }
-  }
-
-  private hashCode(column: string) {
-    let hash = 0, i, chr, len;
-    if (column.length === 0) {
-      return hash;
-    }
-    for (i = 0, len = column.length; i < len; i++) {
-      chr = column.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
   }
 
   public getIdForColumn(column: string) {
