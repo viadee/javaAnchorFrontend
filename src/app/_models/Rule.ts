@@ -4,6 +4,7 @@ export interface Rule {
   coverage: number;
   features: Array<number>;
   instance: { [id: string]: any};
+  label_of_case: string;
   names: Array<string>;
   precision: number;
   prediction: any;

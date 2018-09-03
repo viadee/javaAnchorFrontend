@@ -28,6 +28,9 @@ export class RuleSetOverviewComponent implements OnInit {
 
   settings = {
     columns: {
+      label_of_case: {
+        title: 'label'
+      },
       prediction: {
         title: 'Prediction'
       },
