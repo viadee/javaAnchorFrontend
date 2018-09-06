@@ -35,14 +35,15 @@ export class SelectModelComponent implements OnInit {
   modelForm: FormGroup;
 
   servers: String[] = [];
-  models: Model[];
-  frames: DataFrame[];
+  private _models: Model[];
+  private _frames: DataFrame[];
 
   @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
 
   ngOnInit() {
     this.servers.push('local');
     this.servers.push('local-H2O');
+    this.servers.push('Marens-H2O');
     this.modelForm = new FormGroup({
       server: new FormControl(this.paramServer),
       model: new FormControl({value: '', disabled: true}),
@@ -113,6 +114,32 @@ export class SelectModelComponent implements OnInit {
         }
       }
     });
+  }
+
+  get models() {
+    return this._models;
+  }
+
+  set models(models: Model[]) {
+    this._models = models;
+    if (models === undefined || models === null) {
+      if (this.modelForm !== undefined && this.modelForm !== null) {
+        this.modelForm.controls.model.disable()
+      }
+    }
+  }
+
+  get frames() {
+    return this._frames;
+  }
+
+  set frames(frames: DataFrame[]) {
+    this._frames = frames;
+    if (frames === undefined || frames === null) {
+      if (this.modelForm !== undefined && this.modelForm !== null) {
+        this.modelForm.controls.frame.disable()
+      }
+    }
   }
 
   private getServer() {
