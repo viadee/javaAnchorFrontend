@@ -1,20 +1,20 @@
 <div class="jumbotron text-center">
-  <h1>MAvA: Model Analysis via Anchor</h1>
-  <p>The Cake is a Lie</p>
+  <!--<h1>MAvA: Model Analysis via Anchor</h1>-->
+  <!--<p>The Cake is a Lie</p>-->
 </div>
 
-<div class="col-12">
+<div class="col-12 mt-5">
   <div class="col-12">
     <app-select-model (connectionInfo)="selectedConnection($event)"></app-select-model>
   </div>
-  <div class="row" *ngIf="frameSummary !== undefined">
-    <div class="col-3">
-      <label>Frame-Id:&nbsp;</label>{{ frameSummary.frame_id }}
-    </div>
-    <div class="col-2">
-      <label>Rows:&nbsp;</label>{{ frameSummary.row_count }}
-    </div>
-  </div>
+  <!--<div class="row" *ngIf="frameSummary !== undefined">-->
+    <!--<div class="col-3">-->
+      <!--<label>Frame-Id:&nbsp;</label>{{ frameSummary.frame_id }}-->
+    <!--</div>-->
+    <!--<div class="col-2">-->
+      <!--<label>Rows:&nbsp;</label>{{ frameSummary.row_count }}-->
+    <!--</div>-->
+  <!--</div>-->
   <div class="col-12">
     <app-column-info [columns]="frameSummary.column_summary_list" *ngIf="frameSummary !== undefined"></app-column-info>
   </div>
@@ -23,7 +23,7 @@
                                   *ngIf="frameSummary !== undefined"></app-select-case-for-analysis>
   </div>
   <div class="container">
-    <div class="float-right">
+    <div class="float-right mb-3 mt-3">
       <a routerLink="/ruleset-overview" class="btn btn-danger" *ngIf="frameSummary !== undefined"
          [queryParams]="{server: connectionInfo.server, model_id: connectionInfo.modelId, frame_id: connectionInfo.frameId}">Analyse</a>
     </div>

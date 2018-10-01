@@ -43,7 +43,7 @@ export class SelectModelComponent implements OnInit {
   ngOnInit() {
     this.servers.push('local');
     this.servers.push('local-H2O');
-    this.servers.push('Marens-H2O');
+
     this.modelForm = new FormGroup({
       server: new FormControl(this.paramServer),
       model: new FormControl({value: '', disabled: true}),
@@ -124,7 +124,7 @@ export class SelectModelComponent implements OnInit {
     this._models = models;
     if (models === undefined || models === null) {
       if (this.modelForm !== undefined && this.modelForm !== null) {
-        this.modelForm.controls.model.disable()
+        this.modelForm.controls.model.disable();
       }
     }
   }
@@ -137,7 +137,7 @@ export class SelectModelComponent implements OnInit {
     this._frames = frames;
     if (frames === undefined || frames === null) {
       if (this.modelForm !== undefined && this.modelForm !== null) {
-        this.modelForm.controls.frame.disable()
+        this.modelForm.controls.frame.disable();
       }
     }
   }

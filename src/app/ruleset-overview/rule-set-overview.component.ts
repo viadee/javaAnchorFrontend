@@ -29,7 +29,7 @@ export class RuleSetOverviewComponent implements OnInit {
   settings = {
     columns: {
       label_of_case: {
-        title: 'label'
+        title: 'Label'
       },
       prediction: {
         title: 'Prediction'
