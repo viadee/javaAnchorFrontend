@@ -1,11 +1,20 @@
-import { browser, by, element } from 'protractor';
+import {browser, by, element, ProtractorBrowser} from 'protractor';
 
-export class AppPage {
+export class DataOverviewPage {
   navigateTo() {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  getServerSelect() {
+    return element(by.id('server'));
   }
+
+  getModelSelect() {
+    return element(by.id('model'));
+  }
+
+  getFrameSelect() {
+    return element(by.id('frame'));
+  }
+
 }
