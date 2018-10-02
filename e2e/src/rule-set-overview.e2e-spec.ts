@@ -1,4 +1,4 @@
-import {by} from 'protractor';
+import {browser, by, protractor} from 'protractor';
 import {PageHelper} from './page-helper';
 import {RuleSetOverviewPage} from './rule-set.po';
 
@@ -6,9 +6,16 @@ describe('configuration', () => {
   let page: RuleSetOverviewPage;
   let ph: PageHelper;
 
+  let oldTimeout;
   beforeEach(() => {
     page = new RuleSetOverviewPage();
     ph = new PageHelper();
+    oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
+  });
+
+  afterEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
   });
 
   it('should view empty table', () => {
@@ -17,7 +24,8 @@ describe('configuration', () => {
         return page.getRuleSetTable();
       })
       .then(table => {
-        table.element(by.cssContainingText('td', 'No data found'))
+        expect(table.element(by.cssContainingText('td', 'No data found')).isDisplayed())
+          .toBeTruthy();
       });
   });
 
@@ -39,6 +47,7 @@ describe('configuration', () => {
   });
 
   it('should generate an anchor', () => {
+    const EC = protractor.ExpectedConditions;
     let featuresFromOverview;
     page.navigateTo()
       .then((features) => {
@@ -48,18 +57,23 @@ describe('configuration', () => {
         page.getAnalyseBtn().click();
       })
       .then(() => {
-        page.getRuleSetTable().element(by.css('tbody'))
-          .all(by.css('tr')).count();
+        browser.wait(EC.invisibilityOf(page.getRuleSetTable()
+          .element(by.cssContainingText('td', 'No data found'))), 120000);
+      })
+      .then(() => {
+        return page.getRuleSetTable().$('tbody')
+          .$$('tr').count();
       })
       .then((count) => {
         expect(count).toBe(1);
       })
       .then(() => {
-        page.getRuleSetTable().element(by.css('tbody')).element(by.css('tr')).all(by.css('td')).get(6)
+        return page.getRuleSetTable().element(by.css('tbody')).$('tr').$$('td').get(6)
           .element(by.css('ul')).all(by.css('li')).count();
       })
       .then(count => {
-        expect(count).toBe(featuresFromOverview.length);
+        // -1 'cause target is not in instance
+        expect(count).toBe(featuresFromOverview.length - 1);
       });
   });
 });

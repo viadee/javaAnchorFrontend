@@ -17,14 +17,10 @@ export class RuleSetOverviewPage {
         initPage.getAnalyseBtn().click();
         return features;
       });
-      // .then((features) => {
-      //   browser.wait(elementIsVisible(element(by.css('app-ruleset-overview'))), 5000);
-      //   return features;
-      // });
   }
 
   getRuleSetTable() {
-    return browser.element(by.css('ng-2-smart-table')).element(by.css('table'));
+    return browser.element(by.css('ng2-smart-table')).element(by.css('table'));
   }
 
   getConditionsForm() {
