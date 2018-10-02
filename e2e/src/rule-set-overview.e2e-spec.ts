@@ -36,5 +36,30 @@ describe('configuration', () => {
           });
         });
       });
-  })
+  });
+
+  it('should generate an anchor', () => {
+    let featuresFromOverview;
+    page.navigateTo()
+      .then((features) => {
+        featuresFromOverview = features;
+      })
+      .then(() => {
+        page.getAnalyseBtn().click();
+      })
+      .then(() => {
+        page.getRuleSetTable().element(by.css('tbody'))
+          .all(by.css('tr')).count();
+      })
+      .then((count) => {
+        expect(count).toBe(1);
+      })
+      .then(() => {
+        page.getRuleSetTable().element(by.css('tbody')).element(by.css('tr')).all(by.css('td')).get(6)
+          .element(by.css('ul')).all(by.css('li')).count();
+      })
+      .then(count => {
+        expect(count).toBe(featuresFromOverview.length);
+      });
+  });
 });

@@ -27,7 +27,7 @@ describe('model-frame-overview', () => {
         expect(page.getModelSelect().isEnabled()).toBe(true);
         expect(page.getModelSelect().all(by.tagName('option')).count()).toBe(1);
         expect(page.getFrameSelect().isEnabled()).toBe(true);
-        expect(page.getFrameSelect().all(by.tagName('option')).count()).toBe(4);
+        expect(page.getFrameSelect().all(by.tagName('option')).count()).toBe(2);
       })
       .catch((err) => {
         fail(err);
@@ -48,20 +48,25 @@ describe('model-frame-overview', () => {
   it('should view cards with type real with summary', () => {
     page.configureAndGetFirstCardWithType('int')
       .then(card => {
-        ph.getTableSiblingText(card, 'Min').then(min => {
-          ph.getTableSiblingText(card, 'Max').then(max => {
+        ph.getTableSiblingText(card, 'Min').then(minString => {
+          ph.getTableSiblingText(card, 'Max').then(maxString => {
 
-            expect(Number(max) - Number(min)).toBeGreaterThan(0);
+            // TODO handle i18n
+            const min = Number.parseInt(minString.replace(/[^\d\.\-]/g, ''));
+            const max = Number.parseInt(maxString.replace(/[^\d\.\-]/g, ''));
 
-            ph.getTableSiblingText(card, 'Mean').then(mean => {
-                expect(Number(mean)).toBeGreaterThanOrEqual(Number(min));
-                expect(Number(mean)).toBeLessThanOrEqual(Number(max));
+            expect(max - min).toBeGreaterThan(0);
+
+            ph.getTableSiblingText(card, 'Mean').then(meanString => {
+              const mean = Number.parseInt(meanString.replace(/[^\d\.\-]/g, ''));
+              expect(mean).toBeGreaterThanOrEqual(min);
+              expect(mean).toBeLessThanOrEqual(max);
             })
           });
         });
 
         ph.getTableSiblingText(card, 'Missing').then(missing => {
-            expect(Number(missing)).toBeGreaterThanOrEqual(0);
+          expect(Number(missing)).toBeGreaterThanOrEqual(0);
         })
       });
   });
@@ -78,10 +83,10 @@ describe('model-frame-overview', () => {
 
         return card;
       }).then(card => {
-        card.element(by.css('table')).element(by.css('tbody')).all(by.css('tr')).count().then(count => {
-          expect(count).toBeGreaterThan(0);
-        });
+      card.element(by.css('table')).element(by.css('tbody')).all(by.css('tr')).count().then(count => {
+        expect(count).toBeGreaterThan(0);
       });
+    });
   });
 
   it('should view the first 100 instances of the data set', () => {
@@ -89,7 +94,7 @@ describe('model-frame-overview', () => {
       .then(() => {
         page.getSelectCaseForAnalysis().element(by.css('thead')).all(by.css('tr')).first()
           .all(by.css('th')).count().then((count) => {
-            expect(count).toBeGreaterThan(0);
+          expect(count).toBeGreaterThan(0);
         })
       })
       .then(() => {

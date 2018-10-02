@@ -31,4 +31,8 @@ export class RuleSetOverviewPage {
     return browser.element(by.css('app-case-condition-select')).element(by.css('form'));
   }
 
+  getAnalyseBtn() {
+    return browser.element(by.cssContainingText('button', 'Start analysis'))
+  }
+
 }
