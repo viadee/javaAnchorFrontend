@@ -1,4 +1,4 @@
-import {browser, by} from 'protractor';
+import {by} from 'protractor';
 import {PageHelper} from './page-helper';
 import {RuleSetOverviewPage} from './rule-set.po';
 
@@ -14,7 +14,7 @@ describe('configuration', () => {
   it('should view empty table', () => {
     page.navigateTo()
       .then(() => {
-        return browser.element(by.css('ng-2-smart-table')).element(by.css('table'))
+        return page.getRuleSetTable();
       })
       .then(table => {
         table.element(by.cssContainingText('td', 'No data found'))
@@ -27,8 +27,14 @@ describe('configuration', () => {
       .then((features) => {
         featuresFromOverview = features;
       })
-      .then(table => {
-
+      .then(() => {
+        featuresFromOverview.forEach(feature => {
+          expect(page.getConditionsForm().$('#id_' + String(feature)
+            .replace(/\./g, '\\.'))
+            .isPresent()).toBe(true).catch(err => {
+            fail(feature + ": " + err);
+          });
+        });
       });
   })
 });
