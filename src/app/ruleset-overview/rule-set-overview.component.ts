@@ -6,6 +6,7 @@ import {ListRenderComponent} from '../_helpers/list-render.component';
 import {LocalDataSource} from 'ng2-smart-table';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {FrameSummary} from '../_models/FrameSummary';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-ruleset-overview',
@@ -69,7 +70,8 @@ export class RuleSetOverviewComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private _router: Router,
               private _h2oApi: H2oApiService,
-              private _globals: GlobalVariablesComponent) {
+              private _globals: GlobalVariablesComponent,
+              private _spinner: NgxSpinnerService) {
     this.source = new LocalDataSource();
 
     route.queryParams.forEach(value => {
@@ -99,12 +101,17 @@ export class RuleSetOverviewComponent implements OnInit {
   }
 
   public requestAnalyzation(event: Map<string, string>) {
+    this._spinner.show();
     this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, event).subscribe((data: any) => {
       const rule = JSON.parse(data);
       this.rules.push(rule);
       this._globals.addRule(rule);
 
       this.source.load(this.rules);
+
+      this._spinner.hide();
+    }, (err) => {
+      this._spinner.hide();
     });
   }
 

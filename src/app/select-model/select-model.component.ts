@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {Model} from '../_models/Model';
 import {DataFrame} from '../_models/DataFrame';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -20,7 +21,8 @@ export class SelectModelComponent implements OnInit {
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
-              private _h2oApi: H2oApiService) {
+              private _h2oApi: H2oApiService,
+              private _spinner: NgxSpinnerService) {
     _route.queryParams.forEach(value => {
       if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
         this.paramServer = value.server;
@@ -38,6 +40,9 @@ export class SelectModelComponent implements OnInit {
   private _models: Model[];
   private _frames: DataFrame[];
 
+  private modelsLoaded: boolean;
+  private framesLoaded: boolean;
+
   @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
 
   ngOnInit() {
@@ -51,20 +56,26 @@ export class SelectModelComponent implements OnInit {
     });
 
     if (this.paramServer !== undefined && this.paramServer !== null) {
-      this.loadModels();
-      this.loadFrames();
+      // this.loadModels();
+      // this.loadFrames();
+      this.loadModelsAndFrames(null);
     }
   }
 
   public loadModelsAndFrames(event) {
     this.models = null;
     this.frames = null;
+    this.modelsLoaded = false;
+    this.framesLoaded = false;
 
+    this._spinner.show();
     this._h2oApi.tryConnect(this.getServer()).subscribe((canConnect: any) => {
       if (JSON.parse(canConnect)['can_connect'] === true) {
         this.loadModels();
         this.loadFrames();
       } else {
+        // failed to connect to server
+        this._spinner.hide();
         // TODO fehler anzeigen
       }
     });
@@ -93,6 +104,10 @@ export class SelectModelComponent implements OnInit {
           }
         }
       }
+      this.modelsLoaded = true;
+      this.checkLoadedData();
+    }, (err) => {
+      this._spinner.hide();
     });
   }
 
@@ -113,7 +128,17 @@ export class SelectModelComponent implements OnInit {
           }
         }
       }
+      this.framesLoaded = true;
+      this.checkLoadedData();
+    }, (err) => {
+      this._spinner.hide();
     });
+  }
+
+  private checkLoadedData() {
+    if (this.framesLoaded && this.modelsLoaded) {
+      this._spinner.hide();
+    }
   }
 
   get models() {

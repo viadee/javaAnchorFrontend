@@ -17,6 +17,7 @@ import {SafeNumberPipe} from './_helpers/safe-number.pipe';
 import {DecimalPipe} from '@angular/common';
 import {GlobalVariablesComponent} from './_helpers/global-variables.component';
 import { CaseConditionSelectComponent } from './case-condition-select/case-condition-select.component';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   entryComponents: [
@@ -40,6 +41,7 @@ import { CaseConditionSelectComponent } from './case-condition-select/case-condi
     ReactiveFormsModule,
     HttpClientModule,
     Ng2SmartTableModule,
+    NgxSpinnerModule,
     // BsDropdownModule.forRoot(),
     // ModalModule.forRoot(),
     // ChartsModule,
