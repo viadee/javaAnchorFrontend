@@ -1,6 +1,5 @@
-import {browser, by, element, until} from 'protractor';
+import {browser, by} from 'protractor';
 import {ModelFrameOverviewPage} from './model-frame-overview.po';
-import elementIsVisible = until.elementIsVisible;
 
 export class RuleSetOverviewPage {
 
