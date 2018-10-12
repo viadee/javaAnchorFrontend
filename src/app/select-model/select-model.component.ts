@@ -46,7 +46,6 @@ export class SelectModelComponent implements OnInit {
   @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
 
   ngOnInit() {
-    this.servers.push('local');
     this.servers.push('local-H2O');
 
     this.modelForm = new FormGroup({
