@@ -70,7 +70,7 @@ export class SelectModelComponent implements OnInit {
 
     this._spinner.show();
     this._h2oApi.tryConnect(this.getServer()).subscribe((canConnect: any) => {
-      if (JSON.parse(canConnect)['can_connect'] === true) {
+      if (canConnect.can_connect === true) {
         this.loadModels();
         this.loadFrames();
       } else {
