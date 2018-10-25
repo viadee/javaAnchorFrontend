@@ -4,6 +4,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {Model} from '../../_models/Model';
 import {DataFrame} from '../../_models/DataFrame';
+import {FrameSummary} from '../../_models/FrameSummary';
 
 
 export interface Models {
@@ -32,16 +33,16 @@ export class H2oApiService {
       );
   }
 
-  getModels(h2oInstance: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/${h2oInstance}/models`, this.getHttpOptions());
+  getModels(h2oInstance: string): Observable<Model[]> {
+    return this.http.get<Model[]>(`${this.API_URL}/${h2oInstance}/models`, this.getHttpOptions());
   }
 
-  getDataFrames(h2oInstance: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/${h2oInstance}/frames`, this.getHttpOptions());
+  getDataFrames(h2oInstance: string): Observable<DataFrame[]> {
+    return this.http.get<DataFrame[]>(`${this.API_URL}/${h2oInstance}/frames`, this.getHttpOptions());
   }
 
-  getDataFrame(h2oInstance: string, frame_id: string): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/${h2oInstance}/frames/${frame_id}`, this.getHttpOptions());
+  getDataFrame(h2oInstance: string, frame_id: string): Observable<FrameSummary> {
+    return this.http.get<FrameSummary>(`${this.API_URL}/${h2oInstance}/frames/${frame_id}`, this.getHttpOptions());
   }
 
   getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: Map<string, string>): Observable<any> {
@@ -57,7 +58,7 @@ export class H2oApiService {
   }
 
   getCaseSelectConditions(h2oInstance: string, model_id: string, frame_id: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/${h2oInstance}/frames/${frame_id}/conditions`, this.getHttpOptions())
+    return this.http.get(`${this.API_URL}/${h2oInstance}/frames/${frame_id}/conditions`, this.getHttpOptions());
   }
 
   private getHttpOptions() {

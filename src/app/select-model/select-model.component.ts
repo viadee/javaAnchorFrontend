@@ -68,8 +68,8 @@ export class SelectModelComponent implements OnInit {
     this.framesLoaded = false;
 
     this._spinner.show();
-    this._h2oApi.tryConnect(this.getServer()).subscribe((canConnect: any) => {
-      if (canConnect.can_connect === true) {
+    this._h2oApi.tryConnect(this.getServer()).subscribe((response: any) => {
+      if (response.can_connect === true) {
         this.loadModels();
         this.loadFrames();
       } else {
@@ -88,8 +88,8 @@ export class SelectModelComponent implements OnInit {
 
   public loadModels() {
     this._h2oApi
-      .getModels(this.getServer()).subscribe((data) => {
-      this.models = JSON.parse(data);
+      .getModels(this.getServer()).subscribe((response) => {
+        this.models = response;
       if (this.models == null) {
         const no_models_available = new Model(null, 'no models available', null, null);
         this.models = [no_models_available];
@@ -112,8 +112,8 @@ export class SelectModelComponent implements OnInit {
 
   public loadFrames() {
     this._h2oApi
-      .getDataFrames(this.getServer()).subscribe((data) => {
-      this.frames = JSON.parse(data);
+      .getDataFrames(this.getServer()).subscribe((response) => {
+        this.frames = response;
       if (this.frames == null) {
         const no_frame_available = new DataFrame(null, 'no models available', null);
         this.frames = [no_frame_available];

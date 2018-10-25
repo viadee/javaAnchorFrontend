@@ -81,15 +81,15 @@ export class RuleSetOverviewComponent implements OnInit {
         this.frame_id = value.frame_id;
 
         if (this._globals.getFrameSummary() === null) {
-          this._h2oApi.getDataFrame(this.server, this.frame_id).subscribe(data => {
-            this.frameSummary = JSON.parse(data);
+          this._h2oApi.getDataFrame(this.server, this.frame_id).subscribe(response => {
+            this.frameSummary = response;
             this._globals.setFrameSummary(this.frameSummary);
           });
         }
 
-        this._h2oApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(data => {
-          this.columnsConditions = JSON.parse(data);
-        })
+        this._h2oApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
+          this.columnsConditions = response;
+        });
       } else {
         this._router.navigate(['/model-frame-overview']);
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken

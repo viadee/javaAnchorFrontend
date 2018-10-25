@@ -39,12 +39,13 @@ export class ModelFrameOverviewComponent implements OnInit {
     this.connectionInfo = event;
     this._h2oApi
       .getDataFrame(this.connectionInfo.server, this.connectionInfo.frameId)
-      .subscribe(data => {
-        this.frameSummary = JSON.parse(data);
+      .subscribe(response => {
+        this.frameSummary = response;
         this._globals.setFrameSummary(this.frameSummary);
 
         this._spinner.hide();
       }, (err) => {
+        console.log(err.message);
         this._spinner.hide();
       });
   }
