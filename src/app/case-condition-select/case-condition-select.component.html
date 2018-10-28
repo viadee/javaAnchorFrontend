@@ -4,16 +4,18 @@
     <div *ngFor="let column of enumColumns">
       <label for="id_{{ getIdForColumn(column) }}">Select {{column}}:</label>
       <select class="form-control" id="id_{{ getIdForColumn(column) }}" formControlName="{{ getIdForColumn(column) }}">
-        <option *ngFor="let condition of getColumnsConditionsOf(column)"
-                [ngValue]="condition.key">{{ condition.value }}
+        <option *ngFor="let condition of getEnumColumnsConditionsOf(column)"
+                [ngValue]="condition">{{ condition.category }}
         </option>
       </select>
     </div>
-    <div *ngFor="let column of columns">
+    <div *ngFor="let column of metricColumns">
       <label for="id_{{ getIdForColumn(column) }}">Select {{column}}:</label>
       <select class="form-control" id="id_{{ getIdForColumn(column) }}" formControlName="{{ getIdForColumn(column) }}">
-        <option *ngFor="let condition of getColumnsConditionsOf(column)"
-                [ngValue]="condition.key">{{ condition.value }}
+        <option *ngFor="let condition of getMetricColumnsConditionsOf(column)"
+                [ngValue]="condition">{{
+          condition.conditionMin + " <= " + condition.featureName + " < " + condition.conditionMax
+          }}
         </option>
       </select>
     </div>

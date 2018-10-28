@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
+import {CaseSelectConditionEnum} from '../_models/CaseSelectConditionEnum';
+import {CaseSelectConditionMetric} from '../_models/CaseSelectConditionMetric';
+import {CaseSelectCondition} from '../_models/CaseSelectCondition';
 
 @Component({
   selector: 'app-case-condition-select',
@@ -15,30 +18,37 @@ export class CaseConditionSelectComponent {
 
   selectForm = new FormGroup({});
 
-  @Output() selectedConditions = new EventEmitter<Map<string, string>>();
+  @Output() selectedConditions = new EventEmitter<CaseSelectConditionResponse>();
 
   constructor() {
   }
 
   onSubmit() {
-    const conditions = new Map<string, string>();
+    const conditions: CaseSelectConditionResponse = {
+      enumConditions: new Map<string, Array<CaseSelectConditionEnum>>(),
+      metricConditions: new Map<string, Array<CaseSelectConditionMetric>>()
+    };
     for (const [key, control] of Object.entries(this.selectForm.controls)) {
       if (!control.touched || control.value.length <= 0) {
         continue;
       }
-      conditions.set(key, control.value);
+      if (control.value.columnType === 'string') {
+        conditions.enumConditions[control.value.featureName] = control.value;
+      }
+      if (control.value.columnType === 'metric') {
+        conditions.metricConditions[control.value.featureName] = control.value;
+      }
     }
 
     this.selectedConditions.emit(conditions);
   }
 
-  getColumnsConditionsOf(column: string) {
-    const values = [];
+  getEnumColumnsConditionsOf(column: string): Array<CaseSelectConditionEnum> {
+    return this._columnsConditions.enumConditions[column];
+  }
 
-    for (const [key, val] of Object.entries(this._columnsConditions[column])) {
-      values.push({key: key, value: val});
-    }
-    return values;
+  getMetricColumnsConditionsOf(column: string): Array<CaseSelectConditionMetric> {
+    return this._columnsConditions.metricConditions[column];
   }
 
   @Input()
@@ -48,11 +58,11 @@ export class CaseConditionSelectComponent {
     if (this._columnsConditions !== undefined && this._columnsConditions !== null) {
       this.enumColumns = [];
       this.metricColumns = [];
-      for (const [key, val] of Object.entries(columnsConditions.caseSelectConditionEnum)) {
+      for (const [key, val] of Object.entries(columnsConditions.enumConditions)) {
         this.enumColumns.push(key);
         this.selectForm.addControl(this.getIdForColumn(key), new FormControl(''));
       }
-      for (const [key, val] of Object.entries(columnsConditions.caseSelectConditionMetric)) {
+      for (const [key, val] of Object.entries(columnsConditions.metricConditions)) {
         this.metricColumns.push(key);
         this.selectForm.addControl(this.getIdForColumn(key), new FormControl(''));
       }

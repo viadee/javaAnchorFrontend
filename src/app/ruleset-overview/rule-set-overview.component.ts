@@ -102,7 +102,7 @@ export class RuleSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public requestAnalyzation(selectConditions: Array<CaseSelectCondition>) {
+  public requestAnalyzation(selectConditions: CaseSelectConditionResponse) {
     this._spinner.show();
     this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, selectConditions)
       .subscribe((response: Rule) => {

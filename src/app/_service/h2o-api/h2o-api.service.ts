@@ -52,7 +52,7 @@ export class H2oApiService {
     );
   }
 
-  getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: Array<CaseSelectCondition>): Observable<Rule> {
+  getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: CaseSelectConditionResponse): Observable<Rule> {
     return this.http.post<Rule>(
       `${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`,
       conditions,
