@@ -40,7 +40,7 @@
               <td class="text-right">{{ column.unique }}</td>
             </tr>
 
-            <tr *ngIf="column.column_type === 'enum'">
+            <tr *ngIf="['enum', 'string'].includes(column.column_type)">
               <td colspan="2">
                 <div class="cat-freq-table">
                   <table class="table table-striped">

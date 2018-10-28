@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
 
 @Component({
   selector: 'app-case-condition-select',
@@ -8,8 +9,10 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class CaseConditionSelectComponent {
 
-  private _columnsConditions: Map<string, Map<number, string>>;
-  columns: string[] = [];
+  private _columnsConditions: CaseSelectConditionResponse;
+  enumColumns: string[] = [];
+  metricColumns: string[] = [];
+
   selectForm = new FormGroup({});
 
   @Output() selectedConditions = new EventEmitter<Map<string, string>>();
@@ -39,22 +42,24 @@ export class CaseConditionSelectComponent {
   }
 
   @Input()
-  set columnsConditions(columnsConditions: Map<string, Map<number, string>>) {
+  set columnsConditions(columnsConditions: CaseSelectConditionResponse) {
     this._columnsConditions = columnsConditions;
 
     if (this._columnsConditions !== undefined && this._columnsConditions !== null) {
-      this.columns = [];
-      for (const [key, val] of Object.entries(columnsConditions)) {
-        this.columns.push(key);
+      this.enumColumns = [];
+      this.metricColumns = [];
+      for (const [key, val] of Object.entries(columnsConditions.caseSelectConditionEnum)) {
+        this.enumColumns.push(key);
+        this.selectForm.addControl(this.getIdForColumn(key), new FormControl(''));
       }
-
-      for (const column of this.columns) {
-        this.selectForm.addControl(this.getIdForColumn(column), new FormControl(''));
+      for (const [key, val] of Object.entries(columnsConditions.caseSelectConditionMetric)) {
+        this.metricColumns.push(key);
+        this.selectForm.addControl(this.getIdForColumn(key), new FormControl(''));
       }
     }
   }
 
-  public getIdForColumn(column: string) {
+  public getIdForColumn(column: string): string {
     return column;
   }
 

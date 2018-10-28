@@ -7,6 +7,8 @@ import {LocalDataSource} from 'ng2-smart-table';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {FrameSummary} from '../_models/FrameSummary';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {CaseSelectCondition} from '../_models/CaseSelectCondition';
+import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
 
 @Component({
   selector: 'app-ruleset-overview',
@@ -21,7 +23,7 @@ export class RuleSetOverviewComponent implements OnInit {
 
   frameSummary: FrameSummary;
 
-  columnsConditions: Map<string, Map<string, string>>;
+  columnConditions: CaseSelectConditionResponse;
 
   rules: Array<Rule> = [];
 
@@ -88,7 +90,7 @@ export class RuleSetOverviewComponent implements OnInit {
         }
 
         this._h2oApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
-          this.columnsConditions = response;
+          this.columnConditions = response;
         });
       } else {
         this._router.navigate(['/model-frame-overview']);
@@ -100,19 +102,21 @@ export class RuleSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public requestAnalyzation(event: Map<string, string>) {
+  public requestAnalyzation(selectConditions: Array<CaseSelectCondition>) {
     this._spinner.show();
-    this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, event).subscribe((data: any) => {
-      const rule = JSON.parse(data);
-      this.rules.push(rule);
-      this._globals.addRule(rule);
+    this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, selectConditions)
+      .subscribe((response: Rule) => {
+        const rule = response;
+        this.rules.push(rule);
+        this._globals.addRule(rule);
 
-      this.source.load(this.rules);
+        this.source.load(this.rules);
 
-      this._spinner.hide();
-    }, (err) => {
-      this._spinner.hide();
-    });
+        this._spinner.hide();
+      }, (err) => {
+        console.log("failed to generate rule: " + err.message);
+        this._spinner.hide();
+      });
   }
 
 }
