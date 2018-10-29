@@ -106,13 +106,17 @@ export class RuleSetOverviewComponent implements OnInit {
     this._spinner.show();
     this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, selectConditions)
       .subscribe((response: Rule) => {
+        this._spinner.hide();
         const rule = response;
+        if (rule === null) {
+          // TODO handle no rule from server
+          return;
+        }
+
         this.rules.push(rule);
         this._globals.addRule(rule);
 
         this.source.load(this.rules);
-
-        this._spinner.hide();
       }, (err) => {
         console.log("failed to generate rule: " + err.message);
         this._spinner.hide();
