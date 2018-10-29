@@ -7,8 +7,8 @@ import {LocalDataSource} from 'ng2-smart-table';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {FrameSummary} from '../_models/FrameSummary';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {CaseSelectCondition} from '../_models/CaseSelectCondition';
 import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
+import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest';
 
 @Component({
   selector: 'app-ruleset-overview',
@@ -102,7 +102,7 @@ export class RuleSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public requestAnalyzation(selectConditions: CaseSelectConditionResponse) {
+  public requestAnalyzation(selectConditions: CaseSelectConditionRequest) {
     this._spinner.show();
     this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, selectConditions)
       .subscribe((response: Rule) => {

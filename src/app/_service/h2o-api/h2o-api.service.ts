@@ -5,9 +5,9 @@ import {Observable, of} from 'rxjs';
 import {Model} from '../../_models/Model';
 import {DataFrame} from '../../_models/DataFrame';
 import {FrameSummary} from '../../_models/FrameSummary';
-import {CaseSelectCondition} from '../../_models/CaseSelectCondition';
 import {Rule} from '../../_models/Rule';
 import {CaseSelectConditionResponse} from '../../_models/CaseSelectConditionResponse';
+import {CaseSelectConditionRequest} from '../../_models/CaseSelectConditionRequest';
 
 
 @Injectable({
@@ -52,7 +52,7 @@ export class H2oApiService {
     );
   }
 
-  getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: CaseSelectConditionResponse): Observable<Rule> {
+  getRandomRule(h2oInstance: string, model_id: string, frame_id: string, conditions: CaseSelectConditionRequest): Observable<Rule> {
     return this.http.post<Rule>(
       `${this.API_URL}/${h2oInstance}/rule/${model_id}/${frame_id}`,
       conditions,

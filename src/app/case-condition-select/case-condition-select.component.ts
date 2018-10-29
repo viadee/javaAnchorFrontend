@@ -3,7 +3,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
 import {CaseSelectConditionEnum} from '../_models/CaseSelectConditionEnum';
 import {CaseSelectConditionMetric} from '../_models/CaseSelectConditionMetric';
-import {CaseSelectCondition} from '../_models/CaseSelectCondition';
+import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest';
 
 @Component({
   selector: 'app-case-condition-select',
@@ -18,15 +18,15 @@ export class CaseConditionSelectComponent {
 
   selectForm = new FormGroup({});
 
-  @Output() selectedConditions = new EventEmitter<CaseSelectConditionResponse>();
+  @Output() selectedConditions = new EventEmitter<CaseSelectConditionRequest>();
 
   constructor() {
   }
 
   onSubmit() {
-    const conditions: CaseSelectConditionResponse = {
-      enumConditions: new Map<string, Array<CaseSelectConditionEnum>>(),
-      metricConditions: new Map<string, Array<CaseSelectConditionMetric>>()
+    const conditions: CaseSelectConditionRequest = {
+      enumConditions: new Map<string, CaseSelectConditionEnum>(),
+      metricConditions: new Map<string, CaseSelectConditionMetric>()
     };
     for (const [key, control] of Object.entries(this.selectForm.controls)) {
       if (!control.touched || control.value.length <= 0) {
