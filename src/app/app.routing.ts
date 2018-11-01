@@ -1,11 +1,11 @@
 import {RouterModule, Routes} from '@angular/router';
-import {RuleSetOverviewComponent} from './ruleset-overview/rule-set-overview.component';
+import {AnchorSetOverviewComponent} from './anchorset-overview/anchor-set-overview.component';
 import {ModelFrameOverviewComponent} from './model-frame-overview/model-frame-overview.component';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: 'model-frame-overview', pathMatch: 'full'},
   {path: 'model-frame-overview', component: ModelFrameOverviewComponent},
-  {path: 'ruleset-overview', component: RuleSetOverviewComponent},
+  {path: 'anchorset-overview', component: AnchorSetOverviewComponent},
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

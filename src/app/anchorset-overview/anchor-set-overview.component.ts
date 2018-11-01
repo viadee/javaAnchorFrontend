@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
-import {Rule} from '../_models/Rule';
+import {Anchor} from '../_models/Anchor';
 import {ListRenderComponent} from '../_helpers/list-render.component';
 import {LocalDataSource} from 'ng2-smart-table';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
@@ -9,13 +8,16 @@ import {FrameSummary} from '../_models/FrameSummary';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
 import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest';
+import {FrameApiService} from '../_service/frame-api.service';
+import {FrameColumnApiService} from '../_service/frame-column-api.service';
+import {AnchorApiService} from '../_service/anchor-api.service';
 
 @Component({
-  selector: 'app-ruleset-overview',
-  templateUrl: './rule-set-overview.component.html',
-  styleUrls: ['./rule-set-overview.component.scss']
+  selector: 'app-anchorset-overview',
+  templateUrl: './anchor-set-overview.component.html',
+  styleUrls: ['./anchor-set-overview.component.scss']
 })
-export class RuleSetOverviewComponent implements OnInit {
+export class AnchorSetOverviewComponent implements OnInit {
 
   server: string;
   model_id: string;
@@ -25,7 +27,7 @@ export class RuleSetOverviewComponent implements OnInit {
 
   columnConditions: CaseSelectConditionResponse;
 
-  rules: Array<Rule> = [];
+  anchors: Array<Anchor> = [];
 
   public source: LocalDataSource;
 
@@ -47,7 +49,7 @@ export class RuleSetOverviewComponent implements OnInit {
         title: 'Cases'
       },
       names: {
-        title: 'Rule',
+        title: 'Anchor',
         filter: false,
         type: 'custom',
         renderComponent: ListRenderComponent,
@@ -71,7 +73,9 @@ export class RuleSetOverviewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private _router: Router,
-              private _h2oApi: H2oApiService,
+              private _frameApi: FrameApiService,
+              private _frameColumnApi: FrameColumnApiService,
+              private _anchorApi: AnchorApiService,
               private _globals: GlobalVariablesComponent,
               private _spinner: NgxSpinnerService) {
     this.source = new LocalDataSource();
@@ -83,13 +87,13 @@ export class RuleSetOverviewComponent implements OnInit {
         this.frame_id = value.frame_id;
 
         if (this._globals.getFrameSummary() === null) {
-          this._h2oApi.getDataFrame(this.server, this.frame_id).subscribe(response => {
+          this._frameApi.getFrameSummary(this.server, this.frame_id).subscribe(response => {
             this.frameSummary = response;
             this._globals.setFrameSummary(this.frameSummary);
           });
         }
 
-        this._h2oApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
+        this._frameColumnApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
           this.columnConditions = response;
         });
       } else {
@@ -104,21 +108,21 @@ export class RuleSetOverviewComponent implements OnInit {
 
   public requestAnalyzation(selectConditions: CaseSelectConditionRequest) {
     this._spinner.show();
-    this._h2oApi.getRandomRule(this.server, this.model_id, this.frame_id, selectConditions)
-      .subscribe((response: Rule) => {
+    this._anchorApi.getRandomAnchor(this.server, this.model_id, this.frame_id, selectConditions)
+      .subscribe((response: Anchor) => {
         this._spinner.hide();
-        const rule = response;
-        if (rule === null) {
-          // TODO handle no rule from server
+        const anchor = response;
+        if (anchor === null) {
+          // TODO handle no anchor from server
           return;
         }
 
-        this.rules.push(rule);
-        this._globals.addRule(rule);
+        this.anchors.push(anchor);
+        this._globals.addAnchor(anchor);
 
-        this.source.load(this.rules);
+        this.source.load(this.anchors);
       }, (err) => {
-        console.log("failed to generate rule: " + err.message);
+        console.log("failed to generate anchor: " + err.message);
         this._spinner.hide();
       });
   }

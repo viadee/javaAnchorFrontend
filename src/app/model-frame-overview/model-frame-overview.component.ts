@@ -5,6 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import {FrameSummary} from '../_models/FrameSummary';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {FrameApiService} from '../_service/frame-api.service';
 
 @Component({
   selector: 'app-model-frame-overview',
@@ -14,7 +15,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 export class ModelFrameOverviewComponent implements OnInit {
 
   constructor(private _route: ActivatedRoute,
-              private _h2oApi: H2oApiService,
+              private _frameApi: FrameApiService,
               private _globals: GlobalVariablesComponent,
               private _spinner: NgxSpinnerService) {
 
@@ -37,8 +38,8 @@ export class ModelFrameOverviewComponent implements OnInit {
   selectedConnection(event) {
     this._spinner.show();
     this.connectionInfo = event;
-    this._h2oApi
-      .getDataFrame(this.connectionInfo.server, this.connectionInfo.frameId)
+    this._frameApi
+      .getFrameSummary(this.connectionInfo.server, this.connectionInfo.frameId)
       .subscribe(response => {
         this.frameSummary = response;
         this._globals.setFrameSummary(this.frameSummary);

@@ -10,13 +10,13 @@ import {ColumnInfoComponent} from './column-info/column-info.component';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {DataListComponent} from './data-list/data-list.component';
 import {SelectCaseForAnalysisComponent} from './select-case-for-analysis/select-case-for-analysis.component';
-import {RuleSetOverviewComponent} from './ruleset-overview/rule-set-overview.component';
+import {AnchorSetOverviewComponent} from './anchorset-overview/anchor-set-overview.component';
 import {ModelFrameOverviewComponent} from './model-frame-overview/model-frame-overview.component';
 import {ListRenderComponent} from './_helpers/list-render.component';
 import {SafeNumberPipe} from './_helpers/safe-number.pipe';
 import {DecimalPipe} from '@angular/common';
 import {GlobalVariablesComponent} from './_helpers/global-variables.component';
-import { CaseConditionSelectComponent } from './case-condition-select/case-condition-select.component';
+import {CaseConditionSelectComponent} from './case-condition-select/case-condition-select.component';
 import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
@@ -29,7 +29,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     ColumnInfoComponent,
     DataListComponent,
     SelectCaseForAnalysisComponent,
-    RuleSetOverviewComponent,
+    AnchorSetOverviewComponent,
     ModelFrameOverviewComponent,
     ListRenderComponent,
     SafeNumberPipe,

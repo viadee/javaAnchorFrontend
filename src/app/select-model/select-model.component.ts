@@ -1,11 +1,13 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {Model} from '../_models/Model';
 import {DataFrame} from '../_models/DataFrame';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {ClusterApiService} from '../_service/cluster-api.service';
+import {ModelApiService} from '../_service/model-api.service';
+import {FrameApiService} from '../_service/frame-api.service';
 
 
 @Component({
@@ -21,7 +23,9 @@ export class SelectModelComponent implements OnInit {
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
-              private _h2oApi: H2oApiService,
+              private _clusterApi: ClusterApiService,
+              private _modelApi: ModelApiService,
+              private _frameApi: FrameApiService,
               private _spinner: NgxSpinnerService) {
     _route.queryParams.forEach(value => {
       if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
@@ -68,7 +72,7 @@ export class SelectModelComponent implements OnInit {
     this.framesLoaded = false;
 
     this._spinner.show();
-    this._h2oApi.tryConnect(this.getServer()).subscribe((response: any) => {
+    this._clusterApi.tryConnect(this.getServer()).subscribe((response) => {
       if (response.can_connect === true) {
         this.loadModels();
         this.loadFrames();
@@ -87,9 +91,9 @@ export class SelectModelComponent implements OnInit {
   }
 
   public loadModels() {
-    this._h2oApi
+    this._modelApi
       .getModels(this.getServer()).subscribe((response) => {
-        this.models = response;
+      this.models = response;
       if (this.models == null) {
         const no_models_available = new Model(null, 'no models available', null, null);
         this.models = [no_models_available];
@@ -111,9 +115,8 @@ export class SelectModelComponent implements OnInit {
   }
 
   public loadFrames() {
-    this._h2oApi
-      .getDataFrames(this.getServer()).subscribe((response) => {
-        this.frames = response;
+    this._frameApi.getFrames(this.getServer()).subscribe((response) => {
+      this.frames = response;
       if (this.frames == null) {
         const no_frame_available = new DataFrame(null, 'no models available', null);
         this.frames = [no_frame_available];

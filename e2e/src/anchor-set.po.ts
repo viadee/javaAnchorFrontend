@@ -1,7 +1,7 @@
 import {browser, by} from 'protractor';
 import {ModelFrameOverviewPage} from './model-frame-overview.po';
 
-export class RuleSetOverviewPage {
+export class AnchorSetOverviewPage {
 
   navigateTo() {
     const initPage = new ModelFrameOverviewPage();
@@ -18,7 +18,7 @@ export class RuleSetOverviewPage {
       });
   }
 
-  getRuleSetTable() {
+  getAnchorSetTable() {
     return browser.element(by.css('ng2-smart-table')).element(by.css('table'));
   }
 

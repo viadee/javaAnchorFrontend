@@ -1,14 +1,16 @@
 import {Injectable} from "@angular/core";
 import {FrameSummary} from '../_models/FrameSummary';
-import {Rule} from '../_models/Rule';
+import {Anchor} from '../_models/Anchor';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GlobalVariablesComponent {
 
   private frameSummary: FrameSummary = null;
 
-  private rules: Rule[] = null;
+  private anchors: Anchor[] = null;
 
   public getFrameSummary(): FrameSummary {
     return this.frameSummary;
@@ -18,20 +20,20 @@ export class GlobalVariablesComponent {
     this.frameSummary = frameSummary;
   }
 
-  public getRules(): Rule[] {
-    return this.rules;
+  public getAnchors(): Anchor[] {
+    return this.anchors;
   }
 
-  public setRules(rules): void {
-    this.rules = rules;
+  public setAnchors(anchors): void {
+    this.anchors = anchors;
   }
 
-  public addRule(rule: Rule): void {
-    if (this.rules == null) {
-      this.rules = [];
+  public addAnchor(anchor: Anchor): void {
+    if (this.anchors == null) {
+      this.anchors = [];
     }
 
-    this.rules.push(rule)
+    this.anchors.push(anchor)
   }
 
 }

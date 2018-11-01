@@ -1,4 +1,4 @@
-export interface Rule {
+export interface Anchor {
   model_id: string;
   frame_id: string;
   coverage: number;
