@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
-import {H2oApiService} from '../_service/h2o-api/h2o-api.service';
 import {ActivatedRoute} from '@angular/router';
 import {FrameSummary} from '../_models/FrameSummary';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
