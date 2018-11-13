@@ -18,6 +18,8 @@ import {DecimalPipe} from '@angular/common';
 import {GlobalVariablesComponent} from './_helpers/global-variables.component';
 import {CaseConditionSelectComponent} from './case-condition-select/case-condition-select.component';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { GlobalModelExplanationOverviewComponent } from './global-model-explanation-overview/global-model-explanation-overview.component';
+import { GlobalModelExplanationTabularComponent } from './global-model-explanation-tabular/global-model-explanation-tabular.component';
 
 @NgModule({
   entryComponents: [
@@ -34,6 +36,8 @@ import {NgxSpinnerModule} from 'ngx-spinner';
     ListRenderComponent,
     SafeNumberPipe,
     CaseConditionSelectComponent,
+    GlobalModelExplanationOverviewComponent,
+    GlobalModelExplanationTabularComponent,
   ],
   imports: [
     BrowserModule,
