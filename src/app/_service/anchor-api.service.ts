@@ -13,12 +13,11 @@ export class AnchorApiService {
   constructor(private http: HttpClient) {
   }
 
-
   getRandomAnchor(connectionName: string, model_id: string, frame_id: string, conditions: CaseSelectConditionRequest): Observable<Anchor> {
     return this.http.post<Anchor>(
-      `${BackendApiService.getBackendUrl()}/${connectionName}/anchors/${model_id}/${frame_id}`,
+      `${BackendApiService.getBackendUrl()}/${connectionName}/anchors`,
       conditions,
-      BackendApiService.getHttpOptions()
+      BackendApiService.getHttpOptions({'Model-Id': model_id, 'Frame-Id': frame_id})
     );
   }
 

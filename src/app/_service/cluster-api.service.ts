@@ -27,7 +27,7 @@ export class ClusterApiService {
     return this.http.get<string[]>(
       `${BackendApiService.getBackendUrl()}`,
       BackendApiService.getHttpOptions()
-    )
+    );
   }
 
 }

@@ -122,7 +122,7 @@ export class AnchorSetOverviewComponent implements OnInit {
 
         this.source.load(this.anchors);
       }, (err) => {
-        console.log("failed to generate anchor: " + err.message);
+        console.log('failed to generate anchor: ' + err.message);
         this._spinner.hide();
       });
   }

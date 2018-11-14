@@ -17,10 +17,12 @@ export class BackendApiService {
     return this.API_URL;
   }
 
-  public static getHttpOptions() {
+  public static getHttpOptions(headers?: string | {
+    [name: string]: string | string[];
+  }) {
     return {
       withCredentials: true,
-      headers: new HttpHeaders({}),
+      headers: new HttpHeaders(headers),
     };
   }
 
