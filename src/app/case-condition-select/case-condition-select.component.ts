@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
-import {CaseSelectConditionEnum} from '../_models/CaseSelectConditionEnum';
-import {CaseSelectConditionMetric} from '../_models/CaseSelectConditionMetric';
-import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest';
+import {FeatureConditionResponse} from '../_models/FeatureConditionResponse';
+import {FeatureConditionEnum} from '../_models/FeatureConditionEnum';
+import {FeatureConditionMetric} from '../_models/FeatureConditionMetric';
+import {FeatureConditionRequest} from '../_models/FeatureConditionRequest';
 
 @Component({
   selector: 'app-case-condition-select',
@@ -12,21 +12,21 @@ import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest'
 })
 export class CaseConditionSelectComponent {
 
-  private _columnsConditions: CaseSelectConditionResponse;
+  private _columnsConditions: FeatureConditionResponse;
   enumColumns: string[] = [];
   metricColumns: string[] = [];
 
   selectForm = new FormGroup({});
 
-  @Output() selectedConditions = new EventEmitter<CaseSelectConditionRequest>();
+  @Output() selectedConditions = new EventEmitter<FeatureConditionRequest>();
 
   constructor() {
   }
 
   onSubmit() {
-    const conditions: CaseSelectConditionRequest = {
-      enumConditions: new Map<string, CaseSelectConditionEnum>(),
-      metricConditions: new Map<string, CaseSelectConditionMetric>()
+    const conditions: FeatureConditionRequest = {
+      enumConditions: new Map<string, FeatureConditionEnum>(),
+      metricConditions: new Map<string, FeatureConditionMetric>()
     };
     for (const [key, control] of Object.entries(this.selectForm.controls)) {
       if (!control.touched || control.value.length <= 0) {
@@ -43,16 +43,16 @@ export class CaseConditionSelectComponent {
     this.selectedConditions.emit(conditions);
   }
 
-  getEnumColumnsConditionsOf(column: string): Array<CaseSelectConditionEnum> {
+  getEnumColumnsConditionsOf(column: string): Array<FeatureConditionEnum> {
     return this._columnsConditions.enumConditions[column];
   }
 
-  getMetricColumnsConditionsOf(column: string): Array<CaseSelectConditionMetric> {
+  getMetricColumnsConditionsOf(column: string): Array<FeatureConditionMetric> {
     return this._columnsConditions.metricConditions[column];
   }
 
   @Input()
-  set columnsConditions(columnsConditions: CaseSelectConditionResponse) {
+  set columnsConditions(columnsConditions: FeatureConditionResponse) {
     this._columnsConditions = columnsConditions;
 
     if (this._columnsConditions !== undefined && this._columnsConditions !== null) {

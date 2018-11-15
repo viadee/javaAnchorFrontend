@@ -1,3 +1,6 @@
+import {FeatureConditionMetric} from './FeatureConditionMetric';
+import {FeatureConditionEnum} from './FeatureConditionEnum';
+
 export interface Anchor {
   model_id: string;
   frame_id: string;
@@ -5,7 +8,8 @@ export interface Anchor {
   features: Array<number>;
   instance: { [id: string]: any};
   label_of_case: string;
-  names: Array<string>;
+  metricAnchor: {[id: number]: FeatureConditionMetric};
+  enumAnchor: {[id: number]: FeatureConditionEnum};
   precision: number;
   prediction: any;
   affected_rows: number;

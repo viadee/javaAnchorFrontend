@@ -1,4 +1,4 @@
-export interface CaseSelectCondition {
+export interface FeatureCondition {
   featureName: string;
   columnType: string;
 }

@@ -6,8 +6,8 @@ import {LocalDataSource} from 'ng2-smart-table';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {FrameSummary} from '../_models/FrameSummary';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {CaseSelectConditionResponse} from '../_models/CaseSelectConditionResponse';
-import {CaseSelectConditionRequest} from '../_models/CaseSelectConditionRequest';
+import {FeatureConditionResponse} from '../_models/FeatureConditionResponse';
+import {FeatureConditionRequest} from '../_models/FeatureConditionRequest';
 import {FrameApiService} from '../_service/frame-api.service';
 import {FrameColumnApiService} from '../_service/frame-column-api.service';
 import {AnchorApiService} from '../_service/anchor-api.service';
@@ -25,7 +25,7 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   frameSummary: FrameSummary;
 
-  columnConditions: CaseSelectConditionResponse;
+  columnConditions: FeatureConditionResponse;
 
   anchors: Array<Anchor> = [];
 
@@ -48,7 +48,7 @@ export class AnchorSetOverviewComponent implements OnInit {
       affected_rows: {
         title: 'Cases'
       },
-      names: {
+      anchor: {
         title: 'Anchor',
         filter: false,
         type: 'custom',
@@ -106,7 +106,7 @@ export class AnchorSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public requestAnalyzation(selectConditions: CaseSelectConditionRequest) {
+  public requestAnalyzation(selectConditions: FeatureConditionRequest) {
     this._spinner.show();
     this._anchorApi.getRandomAnchor(this.server, this.model_id, this.frame_id, selectConditions)
       .subscribe((response: Anchor) => {
@@ -117,6 +117,7 @@ export class AnchorSetOverviewComponent implements OnInit {
           return;
         }
 
+        // TODO umformen (names gelöscht)
         this.anchors.push(anchor);
         this._globals.addAnchor(anchor);
 
