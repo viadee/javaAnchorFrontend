@@ -21,9 +21,6 @@ import {ConnectionInfo} from '../_models/ConnectionInfo';
 export class AnchorSetOverviewComponent implements OnInit {
 
   conn: ConnectionInfo;
-  server: string;
-  model_id: string;
-  frame_id: string;
 
   frameSummary: FrameSummary;
 
@@ -71,22 +68,16 @@ export class AnchorSetOverviewComponent implements OnInit {
               private _spinner: NgxSpinnerService) {
     this.source = new LocalDataSource();
 
-    route.queryParams.forEach(value => {
-      if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
-        this.server = value.server;
-        this.model_id = value.model_id;
-        this.frame_id = value.frame_id;
-        this.conn = new ConnectionInfo(this.server, this.model_id, this.frame_id);
-        if (!this.conn.equals(this._globals.getConnection())) {
-          this._globals.updateConnectionInfo(this.conn);
-        }
 
+    this._globals.checkQueryParams(route, (conn) => {
+      if (conn !== null) {
+        this.conn = conn;
         if (this._globals.getAnchors() !== null) {
           this.updateAnchorsList();
         }
 
         if (this._globals.getFrameSummary() === null) {
-          this._frameApi.getFrameSummary(this.server, this.frame_id).subscribe(response => {
+          this._frameApi.getFrameSummary(this.conn.server, this.conn.frameId).subscribe(response => {
             this.frameSummary = response;
             this._globals.setFrameSummary(this.frameSummary);
           });
@@ -97,10 +88,11 @@ export class AnchorSetOverviewComponent implements OnInit {
         if (this._globals.getColumnConditions() !== null) {
           this.columnConditions = this._globals.getColumnConditions();
         } else {
-          this._frameColumnApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
-            this.columnConditions = response;
-            this._globals.setColumnConditions(this.columnConditions);
-          });
+          this._frameColumnApi.getCaseSelectConditions(this.conn.server, this.conn.modelId, this.conn.frameId)
+            .subscribe(response => {
+              this.columnConditions = response;
+              this._globals.setColumnConditions(this.columnConditions);
+            });
         }
       } else {
         this._router.navigate(['/model-frame-overview']);
@@ -114,7 +106,7 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   public requestAnalyzation(selectConditions: FeatureConditionRequest) {
     this._spinner.show();
-    this._anchorApi.getRandomAnchor(this.server, this.model_id, this.frame_id, selectConditions)
+    this._anchorApi.getRandomAnchor(this.conn.server, this.conn.modelId, this.conn.frameId, selectConditions)
       .subscribe((response: Anchor) => {
         this._spinner.hide();
         const anchor = response;

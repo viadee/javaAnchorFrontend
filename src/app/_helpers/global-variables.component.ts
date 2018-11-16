@@ -3,6 +3,7 @@ import {FrameSummary} from '../_models/FrameSummary';
 import {Anchor} from '../_models/Anchor';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {FeatureConditionResponse} from '../_models/FeatureConditionResponse';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Injectable({
@@ -53,6 +54,20 @@ export class GlobalVariablesComponent {
     this.connection = newConn;
     this.anchors = null;
     this.columnConditions = null;
+  }
+
+  public checkQueryParams(route: ActivatedRoute, callback): void {
+    route.queryParams.forEach(value => {
+      let server = value.server;
+      let model_id = value.model_id;
+      let frame_id = value.frame_id;
+      let conn = new ConnectionInfo(server, model_id, frame_id);
+      if (!conn.equals(this.connection)) {
+        this.updateConnectionInfo(conn);
+      }
+
+      callback(this.connection);
+    });
   }
 
 }

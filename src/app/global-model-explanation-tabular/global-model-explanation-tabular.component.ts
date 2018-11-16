@@ -14,11 +14,7 @@ import {Anchor} from '../_models/Anchor';
 })
 export class GlobalModelExplanationTabularComponent implements OnInit {
 
-  server: string;
-  model_id: string;
-  frame_id: string;
-
-  @Input() anchors: Anchor[];
+  anchors: Anchor[];
 
   constructor(private route: ActivatedRoute,
               private _router: Router,
@@ -28,11 +24,12 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
               private _globals: GlobalVariablesComponent,
               private _spinner: NgxSpinnerService) {
 
-    route.queryParams.forEach(value => {
-      if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
-        this.server = value.server;
-        this.model_id = value.model_id;
-        this.frame_id = value.frame_id;
+    this._globals.checkQueryParams(route, (conn) => {
+      if (conn !== null) {
+        this.anchors = this._globals.getAnchors();
+      } else {
+        this._router.navigate(['/model-frame-overview']);
+        // TODO fehler anzeigen oder auf die andere Seite zurückschicken
       }
     });
   }
