@@ -1,5 +1,6 @@
 import {FeatureConditionMetric} from './FeatureConditionMetric';
 import {FeatureConditionEnum} from './FeatureConditionEnum';
+import {FeatureConditionRequest} from './FeatureConditionRequest';
 
 export interface Anchor {
   model_id: string;
@@ -13,6 +14,7 @@ export interface Anchor {
   precision: number;
   prediction: any;
   affected_rows: number;
+  condition: FeatureConditionRequest;
 } {
 
 }

@@ -48,6 +48,12 @@ export class AnchorSetOverviewComponent implements OnInit {
         type: 'custom',
         renderComponent: ListRenderComponent,
       },
+      conditions: {
+        title: 'Instance conditions',
+        filter: false,
+        type: 'custom',
+        renderComponent: ListRenderComponent,
+      },
     },
     actions: {
       add: false,
@@ -115,7 +121,7 @@ export class AnchorSetOverviewComponent implements OnInit {
           return;
         }
 
-        // TODO umformen (names gelöscht)
+        anchor.condition = selectConditions;
         this._globals.addAnchor(anchor);
         this.updateAnchorsList();
       }, (err) => {
@@ -161,7 +167,24 @@ export class AnchorSetOverviewComponent implements OnInit {
       }
       anchorExpl.push(anchorString);
     }
-    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows);
+
+    const enumConditions = anchor.condition.enumConditions;
+    const enumConditionKeys = Object.keys(enumConditions);
+    const metricConditions = anchor.condition.metricConditions;
+    const metricConditionKeys = Object.keys(metricConditions);
+    const conditionLength = enumConditionKeys.length + metricConditionKeys.length;
+
+    const conditions = new Array<string>(conditionLength);
+    for (const key of enumConditionKeys) {
+      conditions.push(key + " = " + enumConditions[key].category);
+    }
+    for (const key of metricConditionKeys) {
+      const metricCondition = metricConditions[key];
+      conditions.push(key + " = Range(" + metricCondition.conditionMin + ", " + metricCondition.conditionMax + ")");
+    }
+
+    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows,
+      conditions);
   }
 
 }
@@ -173,12 +196,14 @@ class CompressedAnchor {
   precision: number;
   prediction: any;
   affected_rows: number;
+  conditions: string[];
 
-  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number) {
+  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number, conditions: string[]) {
     this.coverage = coverage;
     this.anchor = anchor;
     this.precision = precision;
     this.prediction = prediction;
     this.affected_rows = affected_rows;
+    this.conditions = conditions;
   }
 }
