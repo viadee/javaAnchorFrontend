@@ -61,6 +61,11 @@ export class GlobalVariablesComponent {
       let server = value.server;
       let model_id = value.model_id;
       let frame_id = value.frame_id;
+      if (server == null && model_id == null && frame_id == null) {
+        callback(null);
+        return;
+      }
+
       let conn = new ConnectionInfo(server, model_id, frame_id);
       if (!conn.equals(this.connection)) {
         this.updateConnectionInfo(conn);

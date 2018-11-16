@@ -6,7 +6,7 @@
 
     <div class="col-2">
       <a routerLink="/global-model-explanation" class="btn btn-dark" style="width: 100%"
-         [queryParams]="{server: server, model_id: model_id, frame_id: frame_id}">SP</a>
+         [queryParams]="{server: conn.server, model_id: conn.modelId, frame_id: conn.frameId}">SP</a>
       <app-case-condition-select [columnsConditions]="columnConditions"
                                  (selectedConditions)="requestAnalyzation($event)"></app-case-condition-select>
     </div>
