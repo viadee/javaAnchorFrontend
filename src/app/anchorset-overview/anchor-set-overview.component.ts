@@ -136,11 +136,11 @@ export class AnchorSetOverviewComponent implements OnInit {
     this.source.load(this.transformAnchors(this._globals.getAnchors()));
   }
 
-  private transformAnchors(anchor: Anchor[]): CompressedAnchor[] {
-    const transformedAnchors = new Array<CompressedAnchor>(0);
-    anchor.forEach((anchor) => {
-      transformedAnchors.push(this.transformAnchor(anchor));
-    });
+  private transformAnchors(anchors: Anchor[]): CompressedAnchor[] {
+    const transformedAnchors = new Array<CompressedAnchor>(anchors.length);
+    for (let i = 0; i < anchors.length; i++) {
+      transformedAnchors[i] = this.transformAnchor(anchors[i]);
+    }
 
     return transformedAnchors;
   }
