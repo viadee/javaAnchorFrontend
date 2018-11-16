@@ -11,6 +11,7 @@ import {FeatureConditionRequest} from '../_models/FeatureConditionRequest';
 import {FrameApiService} from '../_service/frame-api.service';
 import {FrameColumnApiService} from '../_service/frame-column-api.service';
 import {AnchorApiService} from '../_service/anchor-api.service';
+import {ConnectionInfo} from '../_models/ConnectionInfo';
 
 @Component({
   selector: 'app-anchorset-overview',
@@ -19,6 +20,7 @@ import {AnchorApiService} from '../_service/anchor-api.service';
 })
 export class AnchorSetOverviewComponent implements OnInit {
 
+  conn: ConnectionInfo;
   server: string;
   model_id: string;
   frame_id: string;
@@ -27,15 +29,10 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   columnConditions: FeatureConditionResponse;
 
-  anchors: Array<Anchor> = [];
-
   public source: LocalDataSource;
 
   settings = {
     columns: {
-      label_of_case: {
-        title: 'Label'
-      },
       prediction: {
         title: 'Prediction'
       },
@@ -50,12 +47,6 @@ export class AnchorSetOverviewComponent implements OnInit {
       },
       anchor: {
         title: 'Anchor',
-        filter: false,
-        type: 'custom',
-        renderComponent: ListRenderComponent,
-      },
-      instance: {
-        title: 'Instance',
         filter: false,
         type: 'custom',
         renderComponent: ListRenderComponent,
@@ -85,17 +76,32 @@ export class AnchorSetOverviewComponent implements OnInit {
         this.server = value.server;
         this.model_id = value.model_id;
         this.frame_id = value.frame_id;
+        this.conn = new ConnectionInfo(this.server, this.model_id, this.frame_id);
+        if (!this.conn.equals(this._globals.getConnection())) {
+          this._globals.updateConnectionInfo(this.conn);
+        }
+
+        if (this._globals.getAnchors() !== null) {
+          this.updateAnchorsList();
+        }
 
         if (this._globals.getFrameSummary() === null) {
           this._frameApi.getFrameSummary(this.server, this.frame_id).subscribe(response => {
             this.frameSummary = response;
             this._globals.setFrameSummary(this.frameSummary);
           });
+        } else {
+          this.frameSummary = this._globals.getFrameSummary();
         }
 
-        this._frameColumnApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
-          this.columnConditions = response;
-        });
+        if (this._globals.getColumnConditions() !== null) {
+          this.columnConditions = this._globals.getColumnConditions();
+        } else {
+          this._frameColumnApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
+            this.columnConditions = response;
+            this._globals.setColumnConditions(this.columnConditions);
+          });
+        }
       } else {
         this._router.navigate(['/model-frame-overview']);
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken
@@ -118,14 +124,69 @@ export class AnchorSetOverviewComponent implements OnInit {
         }
 
         // TODO umformen (names gelöscht)
-        this.anchors.push(anchor);
         this._globals.addAnchor(anchor);
-
-        this.source.load(this.anchors);
+        this.updateAnchorsList();
       }, (err) => {
         console.log('failed to generate anchor: ' + err.message);
         this._spinner.hide();
       });
   }
 
+  private updateAnchorsList() {
+    this.source.load(this.transformAnchors(this._globals.getAnchors()));
+  }
+
+  private transformAnchors(anchor: Anchor[]): CompressedAnchor[] {
+    const transformedAnchors = new Array<CompressedAnchor>(0);
+    anchor.forEach((anchor) => {
+      transformedAnchors.push(this.transformAnchor(anchor));
+    });
+
+    return transformedAnchors;
+  }
+
+  private transformAnchor(anchor: Anchor): CompressedAnchor {
+    if (anchor.metricAnchor === undefined || anchor.metricAnchor === null) {
+      anchor.metricAnchor = {};
+    }
+    if (anchor.enumAnchor === undefined || anchor.enumAnchor === null) {
+      anchor.enumAnchor = {};
+    }
+    const metricKeys: string[] = Object.keys(anchor.metricAnchor);
+    const enumKeys: string[] = Object.keys(anchor.enumAnchor);
+
+    const anchorSize = metricKeys.length + enumKeys.length;
+    const anchorExpl = new Array<String>(anchorSize);
+    for (let i = 0; i < anchorSize; i++) {
+      let anchorString;
+      if (enumKeys[i] !== undefined && anchor.enumAnchor.hasOwnProperty(enumKeys[i])) {
+        let condition = anchor.enumAnchor[enumKeys[i]];
+        anchorString = condition.featureName + " = " + condition.category;
+      } else {
+        let condition = anchor.metricAnchor[metricKeys[i]];
+        anchorString = condition.featureName + " = Range(" + condition.conditionMin +
+          ", " + condition.conditionMax + ")";
+      }
+      anchorExpl.push(anchorString);
+    }
+    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows);
+  }
+
+}
+
+
+class CompressedAnchor {
+  coverage: number;
+  anchor: String[];
+  precision: number;
+  prediction: any;
+  affected_rows: number;
+
+  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number) {
+    this.coverage = coverage;
+    this.anchor = anchor;
+    this.precision = precision;
+    this.prediction = prediction;
+    this.affected_rows = affected_rows;
+  }
 }
