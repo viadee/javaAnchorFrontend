@@ -38,37 +38,50 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     });
   }
 
-  private computeTable() {
+  private computeTable(): void {
+    if (!this.anchors) {
+      return;
+    }
     this.computeColumns();
+    console.log("computed columns: " + JSON.stringify(this.anchorFeatures, null, 2));
 
+    console.log("anchors length: " + this.anchors.length);
     for (let rowIndex = 0; rowIndex < this.anchors.length; rowIndex++) {
+      console.log("rowIndex: " + rowIndex + "; anchorsLength: " + this.anchors.length + "; is lower: " + (rowIndex < this.anchors.length));
       const anchor = this.anchors[rowIndex];
 
       const metricKeys = Object.keys(anchor.metricAnchor);
       const enumKeys = Object.keys(anchor.enumAnchor);
-      this.anchorFeatures.forEach((header, columnIndex) => {
-        metricKeys.forEach((key) => {
+      console.log("metricKeys: " + JSON.stringify(metricKeys, null, 2));
+      console.log("enumKeys: " + JSON.stringify(enumKeys, null, 2));
+      for (let columnIndex = 0; columnIndex < this.anchorFeatures.length; columnIndex++) {
+        const header = this.anchorFeatures[columnIndex];
+        console.log("header: " + JSON.stringify(header, null, 2));
+
+        for (let index = 0; index < metricKeys.length; index++) {
+          const key = metricKeys[index];
           if (this.isSameFeatureCondition(header, anchor.metricAnchor[key])) {
             this.addToTable(rowIndex, columnIndex);
-            rowIndex++;
           }
-        });
-        enumKeys.forEach((key) => {
+        }
+        for (let index = 0; index < enumKeys.length; index++) {
+          const key = enumKeys[index];
           if (this.isSameFeatureCondition(header, anchor.enumAnchor[key])) {
             this.addToTable(rowIndex, columnIndex);
-            rowIndex++;
           }
-        });
-      });
+        }
+      }
+      console.log("global anchor: " + JSON.stringify(this.globalAnchorTable, null, 2));
     }
 
-    this.rowRange = [this.globalAnchorTable.length];
+    this.rowRange = new Array<number>(this.globalAnchorTable.length);
     for (let i = 0; i < this.rowRange.length; i++) {
-      this.rowRange  [i] = i;
+      this.rowRange[i] = i;
     }
+    console.log("row range: " + JSON.stringify(this.rowRange));
   }
 
-  private addToTable(row: number, column: number) {
+  private addToTable(row: number, column: number): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
     }
@@ -85,8 +98,11 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     rowData[column] = cell;
   }
 
-  private computeColumns() {
+  private computeColumns(): void {
     this.anchorFeatures = [];
+    if (!this.anchors) {
+      return;
+    }
     for (const anchor of this.anchors) {
       const metricKeys = Object.keys(anchor.metricAnchor);
       const enumKeys = Object.keys(anchor.enumAnchor);
@@ -117,7 +133,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     return false;
   }
 
-  private isSameFeatureCondition(conditionLeft: FeatureCondition, conditionRight: FeatureCondition) {
+  private isSameFeatureCondition(conditionLeft: FeatureCondition, conditionRight: FeatureCondition): boolean {
     if (conditionLeft === null || conditionRight === null) {
       return false;
     }

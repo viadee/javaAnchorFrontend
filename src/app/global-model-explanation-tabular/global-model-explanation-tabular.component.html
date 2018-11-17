@@ -9,8 +9,8 @@
       </thead>
       <tbody>
       <tr *ngFor="let rowIndex of rowRange">
-        <th scope="row">{{ rowIndex }}</th>
-        <td *ngFor="let column of globalAnchorTable[rowIndex]" class="bg-primary">{{ column }}</td>
+        <th scope="row">Anchor {{ rowIndex }}</th>
+        <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column == 1}">{{ (column || 0) }}</td>
       </tr>
       </tbody>
     </table>
