@@ -18,6 +18,10 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   anchorFeatures: FeatureCondition[];
 
+  globalAnchorTable: Array<Array<number>> = null;
+
+  rowRange: Array<number>;
+
   constructor(private route: ActivatedRoute,
               private _router: Router,
               private _globals: GlobalVariablesComponent,
@@ -35,6 +39,53 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private computeTable() {
+    this.computeColumns();
+
+    for (let rowIndex = 0; rowIndex < this.anchors.length; rowIndex++) {
+      const anchor = this.anchors[rowIndex];
+
+      const metricKeys = Object.keys(anchor.metricAnchor);
+      const enumKeys = Object.keys(anchor.enumAnchor);
+      this.anchorFeatures.forEach((header, columnIndex) => {
+        metricKeys.forEach((key) => {
+          if (this.isSameFeatureCondition(header, anchor.metricAnchor[key])) {
+            this.addToTable(rowIndex, columnIndex);
+            rowIndex++;
+          }
+        });
+        enumKeys.forEach((key) => {
+          if (this.isSameFeatureCondition(header, anchor.enumAnchor[key])) {
+            this.addToTable(rowIndex, columnIndex);
+            rowIndex++;
+          }
+        });
+      });
+    }
+
+    this.rowRange = [this.globalAnchorTable.length];
+    for (let i = 0; i < this.rowRange.length; i++) {
+      this.rowRange  [i] = i;
+    }
+  }
+
+  private addToTable(row: number, column: number) {
+    if (this.globalAnchorTable === null) {
+      this.globalAnchorTable = [];
+    }
+    let rowData: Array<number>;
+    if (!this.globalAnchorTable[row]) {
+      this.globalAnchorTable[row] = new Array<number>(this.anchorFeatures.length);
+    }
+    rowData = this.globalAnchorTable[row];
+    let cell = rowData[column];
+    if (!cell) {
+      cell = 0;
+    }
+    cell++;
+    rowData[column] = cell;
+  }
+
+  private computeColumns() {
     this.anchorFeatures = [];
     for (const anchor of this.anchors) {
       const metricKeys = Object.keys(anchor.metricAnchor);
@@ -49,7 +100,9 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private isInFeatureConditionList(condition: FeatureCondition): void {
-    if (!this.containsFeatureCondition(this.anchorFeatures, condition)) {
+    if (!
+      this.containsFeatureCondition(this.anchorFeatures, condition)
+    ) {
       this.anchorFeatures.push(condition);
     }
   }

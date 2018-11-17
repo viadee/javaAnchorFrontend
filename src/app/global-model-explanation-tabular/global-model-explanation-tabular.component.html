@@ -8,29 +8,9 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">A1</th>
-        <td class="bg-primary">1</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-      </tr>
-      <tr>
-        <th scope="row">A1</th>
-        <td>1</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-      </tr>
-      <tr>
-        <th scope="row">A1</th>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
+      <tr *ngFor="let rowIndex of rowRange">
+        <th scope="row">{{ rowIndex }}</th>
+        <td *ngFor="let column of globalAnchorTable[rowIndex]" class="bg-primary">{{ column }}</td>
       </tr>
       </tbody>
     </table>
