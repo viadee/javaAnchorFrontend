@@ -14,7 +14,7 @@ export class ClusterApiService {
 
   tryConnect(connectionName: string): Observable<any> {
     return this.http.get(
-      `${BackendApiService.getBackendUrl()}/${encodeURIComponent(connectionName)}/try_connect`,
+      `${BackendApiService.getBackendUrl(connectionName)}/try_connect`,
       BackendApiService.getHttpOptions()
     )
       .pipe(
@@ -25,7 +25,7 @@ export class ClusterApiService {
 
   getConnectionNames(): Observable<Array<string>> {
     return this.http.get<string[]>(
-      `${BackendApiService.getBackendUrl()}`,
+      `${BackendApiService.getBackendUrlClean()}`,
       BackendApiService.getHttpOptions()
     );
   }

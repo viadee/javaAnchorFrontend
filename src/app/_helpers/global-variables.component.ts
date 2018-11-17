@@ -17,6 +17,8 @@ export class GlobalVariablesComponent {
 
   private anchors: Anchor[] = null;
 
+  private spAnchors: Anchor[] = null;
+
   private columnConditions: FeatureConditionResponse = null;
 
   public getFrameSummary(): FrameSummary {
@@ -25,6 +27,14 @@ export class GlobalVariablesComponent {
 
   public setFrameSummary(frameSummary: FrameSummary): void {
     this.frameSummary = frameSummary;
+  }
+
+  public getSpAnchors(): Anchor[] {
+    return this.spAnchors;
+  }
+
+  public setSpAnchors(spAnchors: Anchor[]): void {
+    this.spAnchors = spAnchors;
   }
 
   public getAnchors(): Anchor[] {

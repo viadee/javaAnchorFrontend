@@ -14,7 +14,7 @@ export class ModelApiService {
 
   getModels(connectionName: string): Observable<Model[]> {
     return this.http.get<Model[]>(
-      `${BackendApiService.getBackendUrl()}/${connectionName}/models`,
+      `${BackendApiService.getBackendUrl(connectionName)}/models`,
       BackendApiService.getHttpOptions()
     );
   }

@@ -1,7 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
-import {NgxSpinnerService} from 'ngx-spinner';
+import {Component, Input, OnInit} from '@angular/core';
 import {Anchor} from '../_models/Anchor';
 import {FeatureConditionMetric} from '../_models/FeatureConditionMetric';
 import {FeatureCondition} from '../_models/FeatureCondition';
@@ -14,49 +11,33 @@ import {FeatureConditionEnum} from '../_models/FeatureConditionEnum';
 })
 export class GlobalModelExplanationTabularComponent implements OnInit {
 
-  anchors: Anchor[];
-
   anchorFeatures: FeatureCondition[];
 
   globalAnchorTable: Array<Array<number>> = null;
 
   rowRange: Array<number>;
 
-  constructor(private route: ActivatedRoute,
-              private _router: Router,
-              private _globals: GlobalVariablesComponent,
-              private _spinner: NgxSpinnerService
-  ) {
-    this._globals.checkQueryParams(route, (conn) => {
-      if (conn !== null) {
-        this.anchors = this._globals.getAnchors();
-        this.computeTable();
-      } else {
-        this._router.navigate(['/model-frame-overview']);
-        // TODO fehler anzeigen oder auf die andere Seite zurückschicken
-      }
-    });
+  constructor() {
   }
 
-  private computeTable(): void {
-    if (!this.anchors) {
+  @Input()
+  set anchors(anchors: Anchor[]) {
+    this.computeTable(anchors);
+  }
+
+  private computeTable(anchors: Anchor[]): void {
+    if (!anchors) {
       return;
     }
-    this.computeColumns();
-    console.log("computed columns: " + JSON.stringify(this.anchorFeatures, null, 2));
+    this.computeColumns(anchors);
 
-    console.log("anchors length: " + this.anchors.length);
-    for (let rowIndex = 0; rowIndex < this.anchors.length; rowIndex++) {
-      console.log("rowIndex: " + rowIndex + "; anchorsLength: " + this.anchors.length + "; is lower: " + (rowIndex < this.anchors.length));
-      const anchor = this.anchors[rowIndex];
+    for (let rowIndex = 0; rowIndex < anchors.length; rowIndex++) {
+      const anchor = anchors[rowIndex];
 
       const metricKeys = Object.keys(anchor.metricAnchor);
       const enumKeys = Object.keys(anchor.enumAnchor);
-      console.log("metricKeys: " + JSON.stringify(metricKeys, null, 2));
-      console.log("enumKeys: " + JSON.stringify(enumKeys, null, 2));
       for (let columnIndex = 0; columnIndex < this.anchorFeatures.length; columnIndex++) {
         const header = this.anchorFeatures[columnIndex];
-        console.log("header: " + JSON.stringify(header, null, 2));
 
         for (let index = 0; index < metricKeys.length; index++) {
           const key = metricKeys[index];
@@ -71,14 +52,12 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
           }
         }
       }
-      console.log("global anchor: " + JSON.stringify(this.globalAnchorTable, null, 2));
     }
 
     this.rowRange = new Array<number>(this.globalAnchorTable.length);
     for (let i = 0; i < this.rowRange.length; i++) {
       this.rowRange[i] = i;
     }
-    console.log("row range: " + JSON.stringify(this.rowRange));
   }
 
   private addToTable(row: number, column: number): void {
@@ -98,12 +77,12 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     rowData[column] = cell;
   }
 
-  private computeColumns(): void {
+  private computeColumns(anchors: Anchor[]): void {
     this.anchorFeatures = [];
-    if (!this.anchors) {
+    if (!anchors) {
       return;
     }
-    for (const anchor of this.anchors) {
+    for (const anchor of anchors) {
       const metricKeys = Object.keys(anchor.metricAnchor);
       const enumKeys = Object.keys(anchor.enumAnchor);
       for (const key of metricKeys) {
@@ -142,10 +121,10 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       && conditionLeft.featureName === conditionRight.featureName) {
       switch (conditionLeft.columnType) {
         case 'metric':
-          const metricCondictionLeft = <FeatureConditionMetric>conditionLeft;
-          const metricCondictionRight = <FeatureConditionMetric>conditionRight;
-          return metricCondictionLeft.conditionMin === metricCondictionRight.conditionMin
-            && metricCondictionLeft.conditionMax === metricCondictionRight.conditionMax;
+          const metricConditionLeft = <FeatureConditionMetric>conditionLeft;
+          const metricConditionRight = <FeatureConditionMetric>conditionRight;
+          return metricConditionLeft.conditionMin === metricConditionRight.conditionMin
+            && metricConditionLeft.conditionMax === metricConditionRight.conditionMax;
         case 'string':
           return (<FeatureConditionEnum>conditionLeft).category === (<FeatureConditionEnum>conditionRight).category;
       }

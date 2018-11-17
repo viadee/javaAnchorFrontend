@@ -15,14 +15,14 @@ export class FrameApiService {
 
   getFrames(connectionName: string): Observable<DataFrame[]> {
     return this.http.get<DataFrame[]>(
-      `${BackendApiService.getBackendUrl()}/${connectionName}/frames`,
+      `${BackendApiService.getBackendUrl(connectionName)}/frames`,
       BackendApiService.getHttpOptions()
     );
   }
 
   getFrameSummary(connectionName: string, frame_id: string): Observable<FrameSummary> {
     return this.http.get<FrameSummary>(
-      `${BackendApiService.getBackendUrl()}/${connectionName}/frames/${frame_id}/summary`,
+      `${BackendApiService.getBackendUrl(connectionName)}/frames/${frame_id}/summary`,
       BackendApiService.getHttpOptions()
     );
   }
