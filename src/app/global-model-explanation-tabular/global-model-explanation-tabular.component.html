@@ -4,7 +4,7 @@
       <thead class="thead-light">
       <tr>
         <th scope="col">#</th>
-        <th *ngFor="let condition of anchorFeatures" scope="col">{{ condition.featureName }}</th>
+        <th *ngFor="let condition of anchorFeatures" scope="col">{{ condition.featureName + ':' + getFeatureConditionTitle(condition) }}</th>
       </tr>
       </thead>
       <tbody>

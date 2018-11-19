@@ -60,6 +60,18 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
+  getFeatureConditionTitle(condition: FeatureCondition): string {
+    if (this.isMetricCondition(condition)) {
+      const metricCon = <FeatureConditionMetric> condition;
+      return "Range(" + metricCon.conditionMin + ", " + metricCon.conditionMax + ")";
+    } else if (this.isEnumCondition(condition)) {
+      return (<FeatureConditionEnum> condition).category;
+    } else {
+      console.log("unhandled column type: " + condition.columnType);
+      // TODO throw error
+    }
+  }
+
   private addToTable(row: number, column: number): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
@@ -95,9 +107,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private isInFeatureConditionList(condition: FeatureCondition): void {
-    if (!
-      this.containsFeatureCondition(this.anchorFeatures, condition)
-    ) {
+    if (!this.containsFeatureCondition(this.anchorFeatures, condition)) {
       this.anchorFeatures.push(condition);
     }
   }
@@ -119,18 +129,28 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
     if (conditionLeft.columnType === conditionRight.columnType
       && conditionLeft.featureName === conditionRight.featureName) {
-      switch (conditionLeft.columnType) {
-        case 'metric':
-          const metricConditionLeft = <FeatureConditionMetric>conditionLeft;
-          const metricConditionRight = <FeatureConditionMetric>conditionRight;
-          return metricConditionLeft.conditionMin === metricConditionRight.conditionMin
-            && metricConditionLeft.conditionMax === metricConditionRight.conditionMax;
-        case 'string':
-          return (<FeatureConditionEnum>conditionLeft).category === (<FeatureConditionEnum>conditionRight).category;
+      if (this.isMetricCondition(conditionLeft)) {
+        const metricConditionLeft = <FeatureConditionMetric>conditionLeft;
+        const metricConditionRight = <FeatureConditionMetric>conditionRight;
+        return metricConditionLeft.conditionMin === metricConditionRight.conditionMin
+          && metricConditionLeft.conditionMax === metricConditionRight.conditionMax;
+      } else if (this.isEnumCondition(conditionLeft)) {
+        return (<FeatureConditionEnum>conditionLeft).category === (<FeatureConditionEnum>conditionRight).category;
+      } else {
+        console.log("unhandled column type: " + conditionLeft.columnType);
+        // TODO handle error
       }
     }
 
     return false;
+  }
+
+  private isMetricCondition(condition: FeatureCondition): boolean {
+    return condition.columnType === 'metric';
+  }
+
+  private isEnumCondition(condition: FeatureCondition): boolean {
+    return condition.columnType === 'string';
   }
 
   ngOnInit() {
