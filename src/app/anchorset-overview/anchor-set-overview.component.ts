@@ -21,9 +21,6 @@ import {ConnectionInfo} from '../_models/ConnectionInfo';
 export class AnchorSetOverviewComponent implements OnInit {
 
   conn: ConnectionInfo;
-  server: string;
-  model_id: string;
-  frame_id: string;
 
   frameSummary: FrameSummary;
 
@@ -51,6 +48,12 @@ export class AnchorSetOverviewComponent implements OnInit {
         type: 'custom',
         renderComponent: ListRenderComponent,
       },
+      conditions: {
+        title: 'Instance conditions',
+        filter: false,
+        type: 'custom',
+        renderComponent: ListRenderComponent,
+      },
     },
     actions: {
       add: false,
@@ -71,22 +74,16 @@ export class AnchorSetOverviewComponent implements OnInit {
               private _spinner: NgxSpinnerService) {
     this.source = new LocalDataSource();
 
-    route.queryParams.forEach(value => {
-      if (value !== undefined && value.hasOwnProperty('server') && value.hasOwnProperty('model_id') && value.hasOwnProperty('frame_id')) {
-        this.server = value.server;
-        this.model_id = value.model_id;
-        this.frame_id = value.frame_id;
-        this.conn = new ConnectionInfo(this.server, this.model_id, this.frame_id);
-        if (!this.conn.equals(this._globals.getConnection())) {
-          this._globals.updateConnectionInfo(this.conn);
-        }
 
+    this._globals.checkQueryParams(route, (conn) => {
+      if (conn !== null) {
+        this.conn = conn;
         if (this._globals.getAnchors() !== null) {
           this.updateAnchorsList();
         }
 
         if (this._globals.getFrameSummary() === null) {
-          this._frameApi.getFrameSummary(this.server, this.frame_id).subscribe(response => {
+          this._frameApi.getFrameSummary(this.conn.server, this.conn.frameId).subscribe(response => {
             this.frameSummary = response;
             this._globals.setFrameSummary(this.frameSummary);
           });
@@ -97,10 +94,11 @@ export class AnchorSetOverviewComponent implements OnInit {
         if (this._globals.getColumnConditions() !== null) {
           this.columnConditions = this._globals.getColumnConditions();
         } else {
-          this._frameColumnApi.getCaseSelectConditions(this.server, this.model_id, this.frame_id).subscribe(response => {
-            this.columnConditions = response;
-            this._globals.setColumnConditions(this.columnConditions);
-          });
+          this._frameColumnApi.getCaseSelectConditions(this.conn.server, this.conn.modelId, this.conn.frameId)
+            .subscribe(response => {
+              this.columnConditions = response;
+              this._globals.setColumnConditions(this.columnConditions);
+            });
         }
       } else {
         this._router.navigate(['/model-frame-overview']);
@@ -114,7 +112,7 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   public requestAnalyzation(selectConditions: FeatureConditionRequest) {
     this._spinner.show();
-    this._anchorApi.getRandomAnchor(this.server, this.model_id, this.frame_id, selectConditions)
+    this._anchorApi.getRandomAnchor(this.conn.server, this.conn.modelId, this.conn.frameId, selectConditions)
       .subscribe((response: Anchor) => {
         this._spinner.hide();
         const anchor = response;
@@ -123,7 +121,7 @@ export class AnchorSetOverviewComponent implements OnInit {
           return;
         }
 
-        // TODO umformen (names gelöscht)
+        anchor.condition = selectConditions;
         this._globals.addAnchor(anchor);
         this.updateAnchorsList();
       }, (err) => {
@@ -169,7 +167,24 @@ export class AnchorSetOverviewComponent implements OnInit {
       }
       anchorExpl.push(anchorString);
     }
-    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows);
+
+    const enumConditions = anchor.condition.enumConditions;
+    const enumConditionKeys = Object.keys(enumConditions);
+    const metricConditions = anchor.condition.metricConditions;
+    const metricConditionKeys = Object.keys(metricConditions);
+    const conditionLength = enumConditionKeys.length + metricConditionKeys.length;
+
+    const conditions = new Array<string>(conditionLength);
+    for (const key of enumConditionKeys) {
+      conditions.push(key + " = " + enumConditions[key].category);
+    }
+    for (const key of metricConditionKeys) {
+      const metricCondition = metricConditions[key];
+      conditions.push(key + " = Range(" + metricCondition.conditionMin + ", " + metricCondition.conditionMax + ")");
+    }
+
+    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows,
+      conditions);
   }
 
 }
@@ -181,12 +196,14 @@ class CompressedAnchor {
   precision: number;
   prediction: any;
   affected_rows: number;
+  conditions: string[];
 
-  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number) {
+  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number, conditions: string[]) {
     this.coverage = coverage;
     this.anchor = anchor;
     this.precision = precision;
     this.prediction = prediction;
     this.affected_rows = affected_rows;
+    this.conditions = conditions;
   }
 }

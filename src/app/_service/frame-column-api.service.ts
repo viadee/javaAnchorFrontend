@@ -14,7 +14,7 @@ export class FrameColumnApiService {
 
   getCaseSelectConditions(connectionName: string, model_id: string, frame_id: string): Observable<FeatureConditionResponse> {
     return this.http.get<FeatureConditionResponse>(
-      `${BackendApiService.getBackendUrl()}/${connectionName}/frames/${frame_id}/conditions`,
+      `${BackendApiService.getBackendUrl(connectionName)}/frames/${frame_id}/conditions`,
       BackendApiService.getHttpOptions()
     );
   }

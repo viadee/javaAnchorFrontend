@@ -13,8 +13,12 @@ export class BackendApiService {
   private constructor() {
   }
 
-  public static getBackendUrl(): string {
-    return this.API_URL;
+  public static getBackendUrl(connectionName: string): string {
+    return `${this.API_URL}/${connectionName}`;
+  }
+
+  public static getBackendUrlClean(): string {
+    return `${this.API_URL}`;
   }
 
   public static getHttpOptions(headers?: string | {
