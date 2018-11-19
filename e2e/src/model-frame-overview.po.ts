@@ -31,7 +31,7 @@ export class ModelFrameOverviewPage {
         this.getFrameSelect().all(by.cssContainingText('option', 'TrainR')).click();
       })
       .then(() => {
-        browser.wait(this.getViewBtn().click())
+        browser.wait(this.getSummarizeBtn().click())
       });
   }
 
@@ -70,8 +70,8 @@ export class ModelFrameOverviewPage {
     return element(by.id('frame'));
   }
 
-  getViewBtn() {
-    return element(by.cssContainingText('a.btn.btn-dark', 'View'));
+  getSummarizeBtn() {
+    return element(by.cssContainingText('a.btn.btn-dark', 'Summarize'));
   }
 
   getCardDeck() {
@@ -86,8 +86,8 @@ export class ModelFrameOverviewPage {
     return element(by.css('app-select-case-for-analysis'));
   }
 
-  getAnalyseBtn() {
-    return element(by.cssContainingText('a', 'Analyse'));
+  getExplainBtn() {
+    return element(by.cssContainingText('a', 'Explain'));
   }
 
 }

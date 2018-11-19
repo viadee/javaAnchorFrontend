@@ -13,7 +13,7 @@ export class AnchorSetOverviewPage {
         return initPage.getFeatures();
       })
       .then((features) => {
-        initPage.getAnalyseBtn().click();
+        initPage.getExplainBtn().click();
         return features;
       });
   }
