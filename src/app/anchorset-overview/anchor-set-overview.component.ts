@@ -112,7 +112,7 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   public requestAnalyzation(selectConditions: FeatureConditionRequest) {
     this._spinner.show();
-    this._anchorApi.getRandomAnchor(this.conn.server, this.conn.modelId, this.conn.frameId, selectConditions)
+    this._anchorApi.computeRule(this.conn.server, this.conn.modelId, this.conn.frameId, selectConditions)
       .subscribe((response: Anchor) => {
         this._spinner.hide();
         const anchor = response;
