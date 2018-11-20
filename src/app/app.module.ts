@@ -20,6 +20,7 @@ import {CaseConditionSelectComponent} from './case-condition-select/case-conditi
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { GlobalModelExplanationOverviewComponent } from './global-model-explanation-overview/global-model-explanation-overview.component';
 import { GlobalModelExplanationTabularComponent } from './global-model-explanation-tabular/global-model-explanation-tabular.component';
+import { AnchorAlgoConfigurationComponent } from './anchor-algo-configuration/anchor-algo-configuration.component';
 
 @NgModule({
   entryComponents: [
@@ -38,6 +39,7 @@ import { GlobalModelExplanationTabularComponent } from './global-model-explanati
     CaseConditionSelectComponent,
     GlobalModelExplanationOverviewComponent,
     GlobalModelExplanationTabularComponent,
+    AnchorAlgoConfigurationComponent,
   ],
   imports: [
     BrowserModule,
