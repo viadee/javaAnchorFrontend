@@ -1,12 +1,12 @@
 export interface AnchorConfigDescription {
   configName: string;
-  defaultValues: Array<any>;
+  defaultValue: any;
   inputType: ConfigInputType;
 }
 
-export enum ConfigInputType {
-  INTEGER = 'int',
-  DOUBLE = 'double',
-  STRING = 'string',
-  ARRAY = 'array',
-}
+type ConfigInputType = 'INTEGER' | 'DOUBLE' | 'STRING';
+export const ConfigInputType = {
+  INT: 'INTEGER' as ConfigInputType,
+  DOUBLE: 'DOUBLE' as ConfigInputType,
+  STRING: 'STRING' as ConfigInputType
+};

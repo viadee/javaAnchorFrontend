@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AnchorApiService} from '../_service/anchor-api.service';
-import {AnchorConfigDescription} from '../_models/AnchorConfigDescription';
+import {AnchorConfigDescription, ConfigInputType} from '../_models/AnchorConfigDescription';
 
 @Component({
   selector: 'app-anchor-algo-configuration',
@@ -20,6 +20,15 @@ export class AnchorAlgoConfigurationComponent implements OnInit {
       }
       this.anchorConfig = result;
     });
+  }
+
+  isConfigNumber(config: AnchorConfigDescription): boolean {
+    return config.inputType === ConfigInputType.INT
+      || config.inputType === ConfigInputType.DOUBLE;
+  }
+
+  isConfigString(config: AnchorConfigDescription): boolean {
+    return config.inputType === ConfigInputType.STRING;
   }
 
   ngOnInit() {

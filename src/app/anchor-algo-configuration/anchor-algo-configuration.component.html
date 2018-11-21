@@ -1,8 +1,13 @@
 <div class="container-fluid">
   <div class="form-group" *ngFor="let config of anchorConfig">
-    <label for="anchor_tao">{{config.configName}}: </label>
-    <input id="anchor_tao" class="form-control" type="number" *ngIf="config.inputType == '' || config.inputType == ''">
-    <input id="anchor_tao" class="form-control" *ngIf="config.inputType == 'string'">
+    <div *ngIf="isConfigNumber(config)">
+      <label for="{{ config.configName }}_anchor_config_number">{{ config.configName }}: </label>
+      <input id="{{ config.configName }}_anchor_config_number" class="form-control" type="number">
+    </div>
+    <div *ngIf="isConfigString(config)">
+      <label for="{{ config.configName }}_anchor_config_string">{{ config.configName }}: </label>
+      <input id="{{ config.configName }}_anchor_config_string" class="form-control">
+    </div>
   </div>
   <div class="form-group" data-tip="tooltip">
     <label for="anchor_delta">Delta: </label>
