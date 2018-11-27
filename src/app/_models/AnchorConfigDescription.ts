@@ -1,6 +1,6 @@
 export interface AnchorConfigDescription {
   configName: string;
-  defaultValue: any;
+  value: any;
   inputType: ConfigInputType;
 }
 

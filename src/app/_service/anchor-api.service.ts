@@ -17,18 +17,22 @@ export class AnchorApiService {
   computeRule(connectionName: string,
               model_id: string,
               frame_id: string,
-              conditions: FeatureConditionRequest): Observable<Anchor> {
+              conditions: FeatureConditionRequest,
+              anchorParameter?: Array<AnchorConfigDescription>): Observable<Anchor> {
+    const httpHeader = AnchorApiService.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
     return this.http.post<Anchor>(
       `${BackendApiService.getBackendUrl(connectionName)}/anchors`,
       conditions,
-      BackendApiService.getHttpOptions({'Model-Id': model_id, 'Frame-Id': frame_id})
+      BackendApiService.getHttpOptions(httpHeader)
     );
   }
 
-  runSubmodularPick(connectionName: string, model_id: string, frame_id: string): Observable<Anchor[]> {
+  runSubmodularPick(connectionName: string, model_id: string, frame_id: string,
+                    anchorParameter?: Array<AnchorConfigDescription>): Observable<Anchor[]> {
+    const httpHeader = AnchorApiService.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
     return this.http.get<Anchor[]>(
       `${BackendApiService.getBackendUrl(connectionName)}/anchors/global`,
-      BackendApiService.getHttpOptions({'Model-Id': model_id, 'Frame-Id': frame_id})
+      BackendApiService.getHttpOptions(httpHeader)
     );
   }
 
@@ -37,6 +41,23 @@ export class AnchorApiService {
       `${BackendApiService.getBackendUrlClean()}/anchors/config`,
       BackendApiService.getHttpOptions()
     );
+  }
+
+  static createHttpOptionsWithAnchorConfig(model_id: string,
+                                    frame_id: string,
+                                    anchorParameter?: Array<AnchorConfigDescription>):
+    string | { [name: string]: string | string[]; } {
+    const httpHeader = {};
+    httpHeader['Model-Id'] = model_id;
+    httpHeader['Frame-Id'] = frame_id;
+
+    if (anchorParameter && anchorParameter.length > 0) {
+      for (let config of anchorParameter) {
+        httpHeader[config.configName] = config.value;
+      }
+    }
+
+    return httpHeader;
   }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AnchorApiService} from '../_service/anchor-api.service';
 import {AnchorConfigDescription, ConfigInputType} from '../_models/AnchorConfigDescription';
 
@@ -11,6 +11,8 @@ export class AnchorAlgoConfigurationComponent implements OnInit {
 
   anchorConfig: Array<AnchorConfigDescription>;
 
+  @Output() onConfigChange = new EventEmitter<Array<AnchorConfigDescription>>();
+
   constructor(
     private _anchorApi: AnchorApiService,
   ) {
@@ -19,6 +21,7 @@ export class AnchorAlgoConfigurationComponent implements OnInit {
         console.log('anchors config is ' + result);
       }
       this.anchorConfig = result;
+      this.onConfigChange.emit(this.anchorConfig);
     });
   }
 
@@ -29,6 +32,15 @@ export class AnchorAlgoConfigurationComponent implements OnInit {
 
   isConfigString(config: AnchorConfigDescription): boolean {
     return config.inputType === ConfigInputType.STRING;
+  }
+
+  configChange(configName: string, configValue: string) {
+    for (let config of this.anchorConfig) {
+      if (config.configName === configName) {
+        config.value = configValue;
+      }
+    }
+    this.onConfigChange.emit(this.anchorConfig);
   }
 
   ngOnInit() {

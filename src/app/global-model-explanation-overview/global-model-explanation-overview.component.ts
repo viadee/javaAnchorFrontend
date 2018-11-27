@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GlobalVariablesComponent} from '../_helpers/global-variables.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Anchor} from '../_models/Anchor';
 import {AnchorApiService} from '../_service/anchor-api.service';
+import {AnchorConfigDescription} from '../_models/AnchorConfigDescription';
 
 @Component({
   selector: 'app-global-model-explanation-overview',
@@ -13,6 +14,8 @@ import {AnchorApiService} from '../_service/anchor-api.service';
 export class GlobalModelExplanationOverviewComponent implements OnInit {
 
   anchors: Anchor[];
+
+  anchorConfig: Array<AnchorConfigDescription>;
 
   constructor(private route: ActivatedRoute,
               private _router: Router,
@@ -29,10 +32,14 @@ export class GlobalModelExplanationOverviewComponent implements OnInit {
     });
   }
 
+  setAnchorConfig(event) {
+    this.anchorConfig = event;
+  }
+
   runSP() {
     this._spinner.show();
     const conn = this._globals.getConnection();
-    this._anchorApi.runSubmodularPick(conn.server, conn.modelId, conn.frameId).subscribe(
+    this._anchorApi.runSubmodularPick(conn.server, conn.modelId, conn.frameId, this.anchorConfig).subscribe(
       (response: Anchor[]) => {
         this._spinner.hide();
         const spAnchors = response;
