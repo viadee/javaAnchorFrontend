@@ -155,17 +155,18 @@ export class AnchorSetOverviewComponent implements OnInit {
 
     const anchorSize = metricKeys.length + enumKeys.length;
     const anchorExpl = new Array<String>(anchorSize);
-    for (let i = 0; i < anchorSize; i++) {
-      let anchorString;
+    for (let i = 0; i < enumKeys.length; i++) {
       if (enumKeys[i] !== undefined && anchor.enumAnchor.hasOwnProperty(enumKeys[i])) {
-        let condition = anchor.enumAnchor[enumKeys[i]];
-        anchorString = condition.featureName + " = " + condition.category;
-      } else {
-        let condition = anchor.metricAnchor[metricKeys[i]];
-        anchorString = condition.featureName + " = Range(" + condition.conditionMin +
-          ", " + condition.conditionMax + ")";
+        const condition = anchor.enumAnchor[enumKeys[i]];
+        anchorExpl.push(condition.featureName + ' = ' + condition.category);
       }
-      anchorExpl.push(anchorString);
+    }
+    for (let i = 0; i < metricKeys.length; i++) {
+      if (metricKeys[i] !== undefined && anchor.metricAnchor.hasOwnProperty(metricKeys[i])) {
+        const condition = anchor.metricAnchor[metricKeys[i]];
+        anchorExpl.push(condition.featureName + ' = Range(' + condition.conditionMin +
+          ', ' + condition.conditionMax + ')');
+      }
     }
 
     const enumConditions = anchor.condition.enumConditions;
