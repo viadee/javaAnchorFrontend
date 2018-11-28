@@ -4,6 +4,7 @@ import {Anchor} from '../_models/Anchor';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
 import {FeatureConditionResponse} from '../_models/FeatureConditionResponse';
 import {ActivatedRoute} from '@angular/router';
+import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class GlobalVariablesComponent {
 
   private anchors: Anchor[] = null;
 
-  private spAnchors: Anchor[] = null;
+  private spAnchors: SubmodularPickResult = null;
 
   private columnConditions: FeatureConditionResponse = null;
 
@@ -29,11 +30,11 @@ export class GlobalVariablesComponent {
     this.frameSummary = frameSummary;
   }
 
-  public getSpAnchors(): Anchor[] {
+  public getSpAnchors(): SubmodularPickResult {
     return this.spAnchors;
   }
 
-  public setSpAnchors(spAnchors: Anchor[]): void {
+  public setSpAnchors(spAnchors: SubmodularPickResult): void {
     this.spAnchors = spAnchors;
   }
 

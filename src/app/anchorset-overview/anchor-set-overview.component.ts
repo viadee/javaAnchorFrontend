@@ -164,7 +164,7 @@ export class AnchorSetOverviewComponent implements OnInit {
     for (let i = 0; i < metricKeys.length; i++) {
       if (metricKeys[i] !== undefined && anchor.metricAnchor.hasOwnProperty(metricKeys[i])) {
         const condition = anchor.metricAnchor[metricKeys[i]];
-        anchorExpl.push(condition.featureName + ' = Range(' + condition.conditionMin +
+        anchorExpl.push(condition.featureName + ' = (' + condition.conditionMin +
           ', ' + condition.conditionMax + ')');
       }
     }
@@ -177,11 +177,11 @@ export class AnchorSetOverviewComponent implements OnInit {
 
     const conditions = new Array<string>(conditionLength);
     for (const key of enumConditionKeys) {
-      conditions.push(key + " = " + enumConditions[key].category);
+      conditions.push(key + ' = ' + enumConditions[key].category);
     }
     for (const key of metricConditionKeys) {
       const metricCondition = metricConditions[key];
-      conditions.push(key + " = Range(" + metricCondition.conditionMin + ", " + metricCondition.conditionMax + ")");
+      conditions.push(key + ' = (' + metricCondition.conditionMin + ', ' + metricCondition.conditionMax + ')');
     }
 
     return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows,

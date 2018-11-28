@@ -5,6 +5,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {Anchor} from '../_models/Anchor';
 import {AnchorApiService} from '../_service/anchor-api.service';
 import {AnchorConfigDescription} from '../_models/AnchorConfigDescription';
+import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 
 @Component({
   selector: 'app-global-model-explanation-overview',
@@ -24,7 +25,7 @@ export class GlobalModelExplanationOverviewComponent implements OnInit {
               private _anchorApi: AnchorApiService) {
     this._globals.checkQueryParams(route, (conn) => {
       if (conn !== null) {
-        this.anchors = this._globals.getSpAnchors();
+        this.anchors = this._globals.getSpAnchors().anchors;
       } else {
         this._router.navigate(['/model-frame-overview']);
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken
@@ -40,15 +41,15 @@ export class GlobalModelExplanationOverviewComponent implements OnInit {
     this._spinner.show();
     const conn = this._globals.getConnection();
     this._anchorApi.runSubmodularPick(conn.server, conn.modelId, conn.frameId, this.anchorConfig).subscribe(
-      (response: Anchor[]) => {
+      (response: SubmodularPickResult) => {
         this._spinner.hide();
-        const spAnchors = response;
+        const spAnchors = response.anchors;
         if (spAnchors === null) {
           // TODO handle no spAnchors from server
           return;
         }
 
-        this._globals.setSpAnchors(spAnchors);
+        this._globals.setSpAnchors(response);
         this.anchors = spAnchors;
       }, (err) => {
         console.log('failed to generate sp anchors: ' + err.message);

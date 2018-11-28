@@ -30,6 +30,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       return;
     }
     this.computeColumns(anchors);
+    this.globalAnchorTable = null;
 
     for (let rowIndex = 0; rowIndex < anchors.length; rowIndex++) {
       const anchor = anchors[rowIndex];
@@ -63,11 +64,11 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   getFeatureConditionTitle(condition: FeatureCondition): string {
     if (this.isMetricCondition(condition)) {
       const metricCon = <FeatureConditionMetric> condition;
-      return "Range(" + metricCon.conditionMin + ", " + metricCon.conditionMax + ")";
+      return '(' + metricCon.conditionMin + ', ' + metricCon.conditionMax + ')';
     } else if (this.isEnumCondition(condition)) {
       return (<FeatureConditionEnum> condition).category;
     } else {
-      console.log("unhandled column type: " + condition.columnType);
+      console.log('unhandled column type: ' + condition.columnType);
       // TODO throw error
     }
   }
@@ -137,7 +138,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       } else if (this.isEnumCondition(conditionLeft)) {
         return (<FeatureConditionEnum>conditionLeft).category === (<FeatureConditionEnum>conditionRight).category;
       } else {
-        console.log("unhandled column type: " + conditionLeft.columnType);
+        console.log('unhandled column type: ' + conditionLeft.columnType);
         // TODO handle error
       }
     }

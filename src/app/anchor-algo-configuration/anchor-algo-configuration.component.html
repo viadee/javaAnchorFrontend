@@ -1,6 +1,6 @@
 <form class="form-inline">
   <div class="form-row col-12">
-    <div class="form-group col-3" *ngFor="let config of anchorConfig">
+    <div class="form-group col-xs" *ngFor="let config of anchorConfig">
         <label for="{{ config.configName }}">{{ config.configName }}: </label>
         <input id="{{ config.configName }}" class="form-control"
                value="{{ config.value }}" (input)="configChange($event.srcElement.id, $event.srcElement.value)">

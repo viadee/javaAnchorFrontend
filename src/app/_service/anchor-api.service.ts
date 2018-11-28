@@ -5,6 +5,7 @@ import {Anchor} from '../_models/Anchor';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AnchorConfigDescription} from '../_models/AnchorConfigDescription';
+import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class AnchorApiService {
               frame_id: string,
               conditions: FeatureConditionRequest,
               anchorParameter?: Array<AnchorConfigDescription>): Observable<Anchor> {
-    const httpHeader = AnchorApiService.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
+    const httpHeader = this.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
     return this.http.post<Anchor>(
       `${BackendApiService.getBackendUrl(connectionName)}/anchors`,
       conditions,
@@ -28,9 +29,9 @@ export class AnchorApiService {
   }
 
   runSubmodularPick(connectionName: string, model_id: string, frame_id: string,
-                    anchorParameter?: Array<AnchorConfigDescription>): Observable<Anchor[]> {
-    const httpHeader = AnchorApiService.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
-    return this.http.get<Anchor[]>(
+                    anchorParameter?: Array<AnchorConfigDescription>): Observable<SubmodularPickResult> {
+    const httpHeader = this.createHttpOptionsWithAnchorConfig(model_id, frame_id, anchorParameter);
+    return this.http.get<SubmodularPickResult>(
       `${BackendApiService.getBackendUrl(connectionName)}/anchors/global`,
       BackendApiService.getHttpOptions(httpHeader)
     );
@@ -43,7 +44,7 @@ export class AnchorApiService {
     );
   }
 
-  static createHttpOptionsWithAnchorConfig(model_id: string,
+  createHttpOptionsWithAnchorConfig(model_id: string,
                                     frame_id: string,
                                     anchorParameter?: Array<AnchorConfigDescription>):
     string | { [name: string]: string | string[]; } {
@@ -52,7 +53,7 @@ export class AnchorApiService {
     httpHeader['Frame-Id'] = frame_id;
 
     if (anchorParameter && anchorParameter.length > 0) {
-      for (let config of anchorParameter) {
+      for (const config of anchorParameter) {
         httpHeader[config.configName] = config.value;
       }
     }
