@@ -3,6 +3,7 @@ import {Anchor} from '../_models/Anchor';
 import {FeatureConditionMetric} from '../_models/FeatureConditionMetric';
 import {FeatureCondition} from '../_models/FeatureCondition';
 import {FeatureConditionEnum} from '../_models/FeatureConditionEnum';
+import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 
 @Component({
   selector: 'app-global-model-explanation-tabular',
@@ -13,27 +14,39 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   anchorFeatures: FeatureCondition[];
 
-  globalAnchorTable: Array<Array<number>> = null;
+  globalAnchorTable: Array<Array<any>> = null;
+
+  spResult: SubmodularPickResult;
 
   rowRange: Array<number>;
+
+  predictions: Array<any>;
 
   constructor() {
   }
 
   @Input()
-  set anchors(anchors: Anchor[]) {
-    this.computeTable(anchors);
+  set anchors(anchors: SubmodularPickResult) {
+    if (!anchors) {
+      return;
+    }
+    this.spResult = anchors;
+    this.computeTable(anchors.anchors);
   }
 
   private computeTable(anchors: Anchor[]): void {
     if (!anchors) {
       return;
     }
+    anchors = anchors.sort((left, right) => this.compareAnchor(left, right));
     this.computeColumns(anchors);
+
     this.globalAnchorTable = null;
+    this.predictions = new Array<any>();
 
     for (let rowIndex = 0; rowIndex < anchors.length; rowIndex++) {
       const anchor = anchors[rowIndex];
+      this.predictions.push(anchor.prediction);
 
       const metricKeys = Object.keys(anchor.metricAnchor);
       const enumKeys = Object.keys(anchor.enumAnchor);
@@ -53,6 +66,10 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
           }
         }
       }
+
+      const row = this.globalAnchorTable[rowIndex];
+      row.push(anchor.coverage.toFixed(4));
+      row.push(anchor.precision.toFixed(4));
     }
 
     this.rowRange = new Array<number>(this.globalAnchorTable.length);
@@ -61,12 +78,16 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
+  compareAnchor(left: Anchor, right: Anchor): number {
+    return left.prediction < right.prediction ? -1 : left.prediction === right.prediction ? 0 : 1;
+  }
+
   getFeatureConditionTitle(condition: FeatureCondition): string {
     if (this.isMetricCondition(condition)) {
-      const metricCon = <FeatureConditionMetric> condition;
+      const metricCon = <FeatureConditionMetric>condition;
       return '(' + metricCon.conditionMin + ', ' + metricCon.conditionMax + ')';
     } else if (this.isEnumCondition(condition)) {
-      return (<FeatureConditionEnum> condition).category;
+      return (<FeatureConditionEnum>condition).category;
     } else {
       console.log('unhandled column type: ' + condition.columnType);
       // TODO throw error
@@ -79,7 +100,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
     let rowData: Array<number>;
     if (!this.globalAnchorTable[row]) {
-      this.globalAnchorTable[row] = new Array<number>(this.anchorFeatures.length);
+      this.globalAnchorTable[row] = new Array<any>(this.anchorFeatures.length);
     }
     rowData = this.globalAnchorTable[row];
     let cell = rowData[column];

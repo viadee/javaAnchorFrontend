@@ -1,16 +1,28 @@
 <div class="row">
   <div>
-    <table class="table">
+    <table class="table" *ngIf="globalAnchorTable !== null">
       <thead class="thead-light">
       <tr>
-        <th scope="col">#</th>
+        <th scope="col" colspan="2">#</th>
+        <th>Prediction</th>
         <th *ngFor="let condition of anchorFeatures" scope="col">{{ condition.featureName + ':' + getFeatureConditionTitle(condition) }}</th>
+        <th>Coverage</th>
+        <th>Precision</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let rowIndex of rowRange">
-        <th scope="row">Anchor {{ rowIndex }}</th>
+        <th scope="row">Anchor</th>
+        <th scope="row">{{ rowIndex }}</th>
+        <td>{{ predictions[rowIndex] }}</td>
         <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column == 1}">{{ (column || 0) }}</td>
+      </tr>
+      <tr class="bg-success">
+        <th scope="row">Total</th>
+        <td></td>
+        <td [attr.colspan]="anchorFeatures.length + 1"></td>
+        <td>{{ spResult.aggregatedCoverage.toFixed(4) }}</td>
+        <td></td>
       </tr>
       </tbody>
     </table>

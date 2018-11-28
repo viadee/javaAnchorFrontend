@@ -14,7 +14,7 @@ import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 })
 export class GlobalModelExplanationOverviewComponent implements OnInit {
 
-  anchors: Anchor[];
+  anchors: SubmodularPickResult;
 
   anchorConfig: Array<AnchorConfigDescription>;
 
@@ -25,7 +25,7 @@ export class GlobalModelExplanationOverviewComponent implements OnInit {
               private _anchorApi: AnchorApiService) {
     this._globals.checkQueryParams(route, (conn) => {
       if (conn !== null) {
-        this.anchors = this._globals.getSpAnchors().anchors;
+        this.anchors = this._globals.getSpAnchors();
       } else {
         this._router.navigate(['/model-frame-overview']);
         // TODO fehler anzeigen oder auf die andere Seite zurückschicken
@@ -50,7 +50,7 @@ export class GlobalModelExplanationOverviewComponent implements OnInit {
         }
 
         this._globals.setSpAnchors(response);
-        this.anchors = spAnchors;
+        this.anchors = response;
       }, (err) => {
         console.log('failed to generate sp anchors: ' + err.message);
         this._spinner.hide();
