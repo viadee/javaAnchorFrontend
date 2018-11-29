@@ -7,7 +7,7 @@
         <th>Prediction</th>
         <th *ngFor="let condition of anchorFeatures" scope="col">{{ condition.featureName + ':' + getFeatureConditionTitle(condition) }}</th>
         <th>Coverage</th>
-        <th>Precision</th>
+        <!--<th>Precision</th>-->
       </tr>
       </thead>
       <tbody>
@@ -15,7 +15,9 @@
         <th scope="row">Anchor</th>
         <th scope="row">{{ rowIndex }}</th>
         <td>{{ predictions[rowIndex] }}</td>
-        <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column == 1}">{{ (column || 0) }}</td>
+        <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column && column[0] > 0}">{{ (column && column[0] || 0) }}</td>
+        <!--<td *ngFor="let column of globalAnchorTable[rowIndex]" [style.backgroundColor]="column && column[1] || '#FFF'">{{ (column && column[0] || 0) }}</td>-->
+        <td>{{ coverage[rowIndex] }}</td>
       </tr>
       <tr class="bg-success">
         <th scope="row">Total</th>

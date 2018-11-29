@@ -14,13 +14,15 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   anchorFeatures: FeatureCondition[];
 
-  globalAnchorTable: Array<Array<any>> = null;
+  globalAnchorTable: Array<Array<Array<any>>> = null;
 
   spResult: SubmodularPickResult;
 
   rowRange: Array<number>;
 
   predictions: Array<any>;
+
+  coverage: Array<string>;
 
   constructor() {
   }
@@ -42,7 +44,10 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     this.computeColumns(anchors);
 
     this.globalAnchorTable = null;
-    this.predictions = new Array<any>();
+    this.predictions = [];
+    this.coverage = [];
+
+    const topOrBottom = true;
 
     for (let rowIndex = 0; rowIndex < anchors.length; rowIndex++) {
       const anchor = anchors[rowIndex];
@@ -56,20 +61,21 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
         for (let index = 0; index < metricKeys.length; index++) {
           const key = metricKeys[index];
           if (this.isSameFeatureCondition(header, anchor.metricAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex, anchor.metricAnchor[key].precision);
+            this.addToTable(rowIndex, columnIndex, topOrBottom, anchor.metricAnchor[key].precision.toFixed(4));
           }
         }
         for (let index = 0; index < enumKeys.length; index++) {
           const key = enumKeys[index];
           if (this.isSameFeatureCondition(header, anchor.enumAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex, anchor.enumAnchor[key].precision);
+            this.addToTable(rowIndex, columnIndex, topOrBottom, anchor.enumAnchor[key].precision.toFixed(4));
           }
         }
       }
 
+      this.coverage.push(anchor.coverage.toFixed(4));
       const row = this.globalAnchorTable[rowIndex];
-      row.push(anchor.coverage.toFixed(4));
-      row.push(anchor.precision.toFixed(4));
+      // row.push([anchor.coverage.toFixed(4), 0]);
+      // row.push([anchor.precision.toFixed(4), 0]);
     }
 
     this.rowRange = new Array<number>(this.globalAnchorTable.length);
@@ -94,18 +100,18 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
-  private addToTable(row: number, column: number, addedPrecision: number): void {
+  private addToTable(row: number, column: number, topOrBottom: boolean, addedPrecision: number): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
     }
-    let rowData: Array<number>;
+    let rowData: Array<Array<any>>;
     if (!this.globalAnchorTable[row]) {
       this.globalAnchorTable[row] = new Array<any>(this.anchorFeatures.length);
     }
     rowData = this.globalAnchorTable[row];
     let cell = rowData[column];
     if (!cell) {
-      cell = addedPrecision;
+      cell = [addedPrecision, this.pickGradientHex(addedPrecision, topOrBottom)];
     }
     // cell++;
     rowData[column] = cell;
@@ -173,6 +179,30 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   private isEnumCondition(condition: FeatureCondition): boolean {
     return condition.columnType === 'string';
+  }
+
+  color1 = [255, 23, 62];
+  color2 = [32, 44, 179];
+
+  private pickGradientHex(weight, topOrBottom: boolean) {
+    if (!weight) {
+      return 0;
+    }
+    const w1 = weight;
+    const w2 = 1 - w1;
+    // return this.rgbToHex(Math.round(this.color1[0] * w1 + this.color2[0] * w2),
+    //   Math.round(this.color1[1] * w1 + this.color2[1] * w2),
+    //   Math.round(this.color1[2] * w1 + this.color2[2] * w2));
+    return this.rgbToHex(255, 255, 255);
+  }
+
+  private rgbToHex(r, g, b) {
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
+
+  private componentToHex(c) {
+    const hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
   }
 
   ngOnInit() {
