@@ -56,13 +56,13 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
         for (let index = 0; index < metricKeys.length; index++) {
           const key = metricKeys[index];
           if (this.isSameFeatureCondition(header, anchor.metricAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex);
+            this.addToTable(rowIndex, columnIndex, anchor.metricAnchor[key].precision);
           }
         }
         for (let index = 0; index < enumKeys.length; index++) {
           const key = enumKeys[index];
           if (this.isSameFeatureCondition(header, anchor.enumAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex);
+            this.addToTable(rowIndex, columnIndex, anchor.enumAnchor[key].precision);
           }
         }
       }
@@ -94,7 +94,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
-  private addToTable(row: number, column: number): void {
+  private addToTable(row: number, column: number, addedPrecision: number): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
     }
@@ -105,9 +105,9 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     rowData = this.globalAnchorTable[row];
     let cell = rowData[column];
     if (!cell) {
-      cell = 0;
+      cell = addedPrecision;
     }
-    cell++;
+    // cell++;
     rowData[column] = cell;
   }
 
