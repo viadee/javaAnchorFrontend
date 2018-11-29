@@ -8,7 +8,7 @@
       <a routerLink="/global-model-explanation" class="btn btn-dark" style="width: 100%"
          [queryParams]="{server: conn.server, model_id: conn.modelId, frame_id: conn.frameId}">SP</a>
       <app-case-condition-select [columnsConditions]="columnConditions"
-                                 (selectedConditions)="requestAnalyzation($event)"></app-case-condition-select>
+                                 (selectedConditions)="requestAnalysis($event)"></app-case-condition-select>
     </div>
   </div>
 </div>

@@ -110,7 +110,7 @@ export class AnchorSetOverviewComponent implements OnInit {
   ngOnInit() {
   }
 
-  public requestAnalyzation(selectConditions: FeatureConditionRequest) {
+  public requestAnalysis(selectConditions: FeatureConditionRequest) {
     this._spinner.show();
     this._anchorApi.computeRule(this.conn.server, this.conn.modelId, this.conn.frameId, selectConditions)
       .subscribe((response: Anchor) => {
@@ -144,26 +144,26 @@ export class AnchorSetOverviewComponent implements OnInit {
   }
 
   private transformAnchor(anchor: Anchor): CompressedAnchor {
-    if (anchor.metricAnchor === undefined || anchor.metricAnchor === null) {
-      anchor.metricAnchor = {};
+    if (!anchor.metricPredicate) {
+      anchor.metricPredicate = {};
     }
-    if (anchor.enumAnchor === undefined || anchor.enumAnchor === null) {
-      anchor.enumAnchor = {};
+    if (!anchor.enumPredicate) {
+      anchor.enumPredicate = {};
     }
-    const metricKeys: string[] = Object.keys(anchor.metricAnchor);
-    const enumKeys: string[] = Object.keys(anchor.enumAnchor);
+    const metricKeys: string[] = Object.keys(anchor.metricPredicate);
+    const enumKeys: string[] = Object.keys(anchor.enumPredicate);
 
     const anchorSize = metricKeys.length + enumKeys.length;
     const anchorExpl = new Array<String>(anchorSize);
     for (let i = 0; i < enumKeys.length; i++) {
-      if (enumKeys[i] !== undefined && anchor.enumAnchor.hasOwnProperty(enumKeys[i])) {
-        const condition = anchor.enumAnchor[enumKeys[i]];
+      if (enumKeys[i] !== undefined && anchor.enumPredicate.hasOwnProperty(enumKeys[i])) {
+        const condition = anchor.enumPredicate[enumKeys[i]];
         anchorExpl.push(condition.featureName + ' = ' + condition.category);
       }
     }
     for (let i = 0; i < metricKeys.length; i++) {
-      if (metricKeys[i] !== undefined && anchor.metricAnchor.hasOwnProperty(metricKeys[i])) {
-        const condition = anchor.metricAnchor[metricKeys[i]];
+      if (metricKeys[i] !== undefined && anchor.metricPredicate.hasOwnProperty(metricKeys[i])) {
+        const condition = anchor.metricPredicate[metricKeys[i]];
         anchorExpl.push(condition.featureName + ' = (' + condition.conditionMin +
           ', ' + condition.conditionMax + ')');
       }

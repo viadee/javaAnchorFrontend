@@ -5,7 +5,7 @@
       <tr>
         <th scope="col" colspan="2">#</th>
         <th>Prediction</th>
-        <th *ngFor="let condition of anchorFeatures" scope="col">{{ condition.featureName + ': ' + getFeatureConditionTitle(condition) }}</th>
+        <th *ngFor="let condition of anchorPredicates" scope="col">{{ condition.featureName + ': ' + getFeatureConditionTitle(condition) }}</th>
         <th>Coverage</th>
         <th>Precision</th>
       </tr>
@@ -13,7 +13,7 @@
       <tbody>
       <tr *ngFor="let rowIndex of rowRange">
         <th scope="row">Anchor</th>
-        <th scope="row">{{ rowIndex }}</th>
+        <th scope="row">{{ rowIndex + 1 }}</th>
         <td>{{ predictions[rowIndex] }}</td>
         <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column && column[0] > 0}">{{ (column && column[0] || 0) }}</td>
         <!--<td *ngFor="let column of globalAnchorTable[rowIndex]" [style.backgroundColor]="column && column[1] || '#FFF'">{{ (column && column[0] || 0) }}</td>-->
@@ -21,9 +21,9 @@
         <td>{{ precision[rowIndex] }}</td>
       </tr>
       <tr class="bg-success">
-        <th scope="row">Total</th>
-        <td></td>
-        <td [attr.colspan]="anchorFeatures.length + 1"></td>
+        <th scope="row" colspan="3">Exact Coverage</th>
+        <!--<td [attr.colspan]="anchorPredicates.length + 1"></td>-->
+        <td *ngFor="let exactCoverage of exactCoverages">{{ exactCoverage }}</td>
         <td>{{ spResult.aggregatedCoverage.toFixed(4) }}</td>
         <td></td>
       </tr>

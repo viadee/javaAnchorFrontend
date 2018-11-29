@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Anchor} from '../_models/Anchor';
-import {FeatureConditionMetric} from '../_models/FeatureConditionMetric';
-import {FeatureCondition} from '../_models/FeatureCondition';
-import {FeatureConditionEnum} from '../_models/FeatureConditionEnum';
 import {SubmodularPickResult} from '../_models/SubmodularPickResult';
+import {AnchorPredicateMetric} from '../_models/AnchorPredicateMetric';
+import {AnchorPredicateEnum} from '../_models/AnchorPredicateEnum';
+import {AnchorPredicate} from '../_models/AnchorPredicate';
 
 @Component({
   selector: 'app-global-model-explanation-tabular',
@@ -12,7 +12,10 @@ import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 })
 export class GlobalModelExplanationTabularComponent implements OnInit {
 
-  anchorFeatures: FeatureCondition[];
+  PRECISION_FRACTION_DIGITS = 3;
+  COVERAGE_FRACTION_DIGITS = 3;
+
+  anchorPredicates: AnchorPredicate[];
 
   globalAnchorTable: Array<Array<Array<any>>> = null;
 
@@ -25,6 +28,8 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   coverage: Array<string>;
 
   precision: Array<string>;
+
+  exactCoverages: Array<string>;
 
   constructor() {
   }
@@ -39,7 +44,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private computeTable(anchors: Anchor[]): void {
-    if (!anchors) {
+    if (!anchors || anchors.length <= 0) {
       return;
     }
     anchors = anchors.sort((left, right) => this.compareAnchor(left, right));
@@ -49,34 +54,31 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     this.predictions = [];
     this.coverage = [];
     this.precision = [];
+    this.exactCoverages = new Array(this.anchorPredicates.length);
 
-    const topOrBottom = true;
+    const topOrBottom = 0;
 
     for (let rowIndex = 0; rowIndex < anchors.length; rowIndex++) {
       const anchor = anchors[rowIndex];
       this.predictions.push(anchor.prediction);
 
-      const metricKeys = Object.keys(anchor.metricAnchor);
-      const enumKeys = Object.keys(anchor.enumAnchor);
-      for (let columnIndex = 0; columnIndex < this.anchorFeatures.length; columnIndex++) {
-        const header = this.anchorFeatures[columnIndex];
+      const metricKeys = Object.keys(anchor.metricPredicate);
+      const enumKeys = Object.keys(anchor.enumPredicate);
+      for (let columnIndex = 0; columnIndex < this.anchorPredicates.length; columnIndex++) {
+        const header = this.anchorPredicates[columnIndex];
 
         for (let index = 0; index < metricKeys.length; index++) {
-          const key = metricKeys[index];
-          if (this.isSameFeatureCondition(header, anchor.metricAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex, topOrBottom, anchor.metricAnchor[key].precision.toFixed(4));
-          }
+          const metricPredicate: AnchorPredicate = anchor.metricPredicate[metricKeys[index]];
+          this.checkAnchorPredicateAndAddToTable(columnIndex, rowIndex, topOrBottom, header, metricPredicate);
         }
         for (let index = 0; index < enumKeys.length; index++) {
-          const key = enumKeys[index];
-          if (this.isSameFeatureCondition(header, anchor.enumAnchor[key])) {
-            this.addToTable(rowIndex, columnIndex, topOrBottom, anchor.enumAnchor[key].precision.toFixed(4));
-          }
+          const enumPredicate: AnchorPredicate = anchor.enumPredicate[enumKeys[index]];
+          this.checkAnchorPredicateAndAddToTable(columnIndex, rowIndex, topOrBottom, header, enumPredicate);
         }
       }
 
-      this.coverage.push(anchor.coverage.toFixed(4));
-      this.precision.push(anchor.precision.toFixed(4));
+      this.coverage.push(anchor.coverage.toFixed(this.COVERAGE_FRACTION_DIGITS));
+      this.precision.push(anchor.precision.toFixed(this.PRECISION_FRACTION_DIGITS));
       // const row = this.globalAnchorTable[rowIndex];
       // row.push([anchor.coverage.toFixed(4), 0]);
       // row.push([anchor.precision.toFixed(4), 0]);
@@ -88,29 +90,40 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
+  private checkAnchorPredicateAndAddToTable(columnIndex: number,
+                                            rowIndex: number,
+                                            topOrBottom: number,
+                                            header: AnchorPredicate,
+                                            predicate: AnchorPredicate) {
+    if (this.isSameFeatureCondition(header, predicate)) {
+      this.exactCoverages[columnIndex] = predicate.exactCoverage.toFixed(this.COVERAGE_FRACTION_DIGITS);
+      this.addToTable(rowIndex, columnIndex, topOrBottom, predicate.addedPrecision.toFixed(this.PRECISION_FRACTION_DIGITS));
+    }
+  }
+
   compareAnchor(left: Anchor, right: Anchor): number {
     return left.prediction < right.prediction ? -1 : left.prediction === right.prediction ? 0 : 1;
   }
 
-  getFeatureConditionTitle(condition: FeatureCondition): string {
+  getFeatureConditionTitle(condition: AnchorPredicate): string {
     if (this.isMetricCondition(condition)) {
-      const metricCon = <FeatureConditionMetric>condition;
+      const metricCon = <AnchorPredicateMetric>condition;
       return '(' + metricCon.conditionMin + ', ' + metricCon.conditionMax + ')';
     } else if (this.isEnumCondition(condition)) {
-      return (<FeatureConditionEnum>condition).category;
+      return (<AnchorPredicateEnum>condition).category;
     } else {
       console.log('unhandled column type: ' + condition.columnType);
       // TODO throw error
     }
   }
 
-  private addToTable(row: number, column: number, topOrBottom: boolean, addedPrecision: number): void {
+  private addToTable(row: number, column: number, topOrBottom: number, addedPrecision: string): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
     }
     let rowData: Array<Array<any>>;
     if (!this.globalAnchorTable[row]) {
-      this.globalAnchorTable[row] = new Array<any>(this.anchorFeatures.length);
+      this.globalAnchorTable[row] = new Array<any>(this.anchorPredicates.length);
     }
     rowData = this.globalAnchorTable[row];
     let cell = rowData[column];
@@ -122,29 +135,30 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private computeColumns(anchors: Anchor[]): void {
-    this.anchorFeatures = [];
+    this.anchorPredicates = [];
     if (!anchors) {
       return;
     }
     for (const anchor of anchors) {
-      const metricKeys = Object.keys(anchor.metricAnchor);
-      const enumKeys = Object.keys(anchor.enumAnchor);
+      const metricKeys = Object.keys(anchor.metricPredicate);
+      const enumKeys = Object.keys(anchor.enumPredicate);
       for (const key of metricKeys) {
-        this.isInFeatureConditionList(anchor.metricAnchor[key]);
+
+        this.isInFeatureConditionList(anchor.metricPredicate[key]);
       }
       for (const key of enumKeys) {
-        this.isInFeatureConditionList(anchor.enumAnchor[key]);
+        this.isInFeatureConditionList(anchor.enumPredicate[key]);
       }
     }
   }
 
-  private isInFeatureConditionList(condition: FeatureCondition): void {
-    if (!this.containsFeatureCondition(this.anchorFeatures, condition)) {
-      this.anchorFeatures.push(condition);
+  private isInFeatureConditionList(condition: AnchorPredicate): void {
+    if (!this.containsFeatureCondition(this.anchorPredicates, condition)) {
+      this.anchorPredicates.push(condition);
     }
   }
 
-  private containsFeatureCondition(conditions: Array<FeatureCondition>, condition: FeatureCondition): boolean {
+  private containsFeatureCondition(conditions: Array<AnchorPredicate>, condition: AnchorPredicate): boolean {
     for (const conditionInList of conditions) {
       if (this.isSameFeatureCondition(condition, conditionInList)) {
         return true;
@@ -154,7 +168,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     return false;
   }
 
-  private isSameFeatureCondition(conditionLeft: FeatureCondition, conditionRight: FeatureCondition): boolean {
+  private isSameFeatureCondition(conditionLeft: AnchorPredicate, conditionRight: AnchorPredicate): boolean {
     if (conditionLeft === null || conditionRight === null) {
       return false;
     }
@@ -162,12 +176,12 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     if (conditionLeft.columnType === conditionRight.columnType
       && conditionLeft.featureName === conditionRight.featureName) {
       if (this.isMetricCondition(conditionLeft)) {
-        const metricConditionLeft = <FeatureConditionMetric>conditionLeft;
-        const metricConditionRight = <FeatureConditionMetric>conditionRight;
+        const metricConditionLeft = <AnchorPredicateMetric>conditionLeft;
+        const metricConditionRight = <AnchorPredicateMetric>conditionRight;
         return metricConditionLeft.conditionMin === metricConditionRight.conditionMin
           && metricConditionLeft.conditionMax === metricConditionRight.conditionMax;
       } else if (this.isEnumCondition(conditionLeft)) {
-        return (<FeatureConditionEnum>conditionLeft).category === (<FeatureConditionEnum>conditionRight).category;
+        return (<AnchorPredicateEnum>conditionLeft).category === (<AnchorPredicateEnum>conditionRight).category;
       } else {
         console.log('unhandled column type: ' + conditionLeft.columnType);
         // TODO handle error
@@ -177,18 +191,18 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     return false;
   }
 
-  private isMetricCondition(condition: FeatureCondition): boolean {
+  private isMetricCondition(condition: AnchorPredicate): boolean {
     return condition.columnType === 'metric';
   }
 
-  private isEnumCondition(condition: FeatureCondition): boolean {
+  private isEnumCondition(condition: AnchorPredicate): boolean {
     return condition.columnType === 'string';
   }
 
   color1 = [255, 23, 62];
   color2 = [32, 44, 179];
 
-  private pickGradientHex(weight, topOrBottom: boolean) {
+  private pickGradientHex(weight, topOrBottom: number) {
     if (!weight) {
       return 0;
     }
