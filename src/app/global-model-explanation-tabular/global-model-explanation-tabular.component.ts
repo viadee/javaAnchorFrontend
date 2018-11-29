@@ -24,6 +24,8 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   coverage: Array<string>;
 
+  precision: Array<string>;
+
   constructor() {
   }
 
@@ -46,6 +48,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     this.globalAnchorTable = null;
     this.predictions = [];
     this.coverage = [];
+    this.precision = [];
 
     const topOrBottom = true;
 
@@ -73,7 +76,8 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       }
 
       this.coverage.push(anchor.coverage.toFixed(4));
-      const row = this.globalAnchorTable[rowIndex];
+      this.precision.push(anchor.precision.toFixed(4));
+      // const row = this.globalAnchorTable[rowIndex];
       // row.push([anchor.coverage.toFixed(4), 0]);
       // row.push([anchor.precision.toFixed(4), 0]);
     }
