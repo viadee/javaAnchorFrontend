@@ -12,6 +12,9 @@ import {AnchorPredicate} from '../_models/AnchorPredicate';
 })
 export class GlobalModelExplanationTabularComponent implements OnInit {
 
+  color1 = [255, 23, 62];
+  color2 = [32, 44, 179];
+
   PRECISION_FRACTION_DIGITS = 3;
   COVERAGE_FRACTION_DIGITS = 3;
 
@@ -108,7 +111,8 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   getFeatureConditionTitle(condition: AnchorPredicate): string {
     if (this.isMetricCondition(condition)) {
       const metricCon = <AnchorPredicateMetric>condition;
-      return '(' + metricCon.conditionMin + ', ' + metricCon.conditionMax + ')';
+      const roundLength = this.round(metricCon.conditionMin, metricCon.conditionMax);
+      return '(' + metricCon.conditionMin.toFixed(roundLength) + ', ' + metricCon.conditionMax.toFixed(roundLength) + ')';
     } else if (this.isEnumCondition(condition)) {
       return (<AnchorPredicateEnum>condition).category;
     } else {
@@ -199,9 +203,6 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     return condition.columnType === 'string';
   }
 
-  color1 = [255, 23, 62];
-  color2 = [32, 44, 179];
-
   private pickGradientHex(weight, topOrBottom: number) {
     if (!weight) {
       return 0;
@@ -215,12 +216,42 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private rgbToHex(r, g, b) {
-    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+    return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
 
   private componentToHex(c) {
     const hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+    return hex.length === 1 ? '0' + hex : hex;
+  }
+
+  /**
+   * Finds the index in which the floating number differs even if the pre dot value is not the same.
+   *
+   * @param left
+   * @param right
+   */
+  private round(left: number, right: number): number {
+    const truncedLeft = Math.trunc(left);
+    const truncedRight = Math.trunc(right);
+    if (truncedLeft === left && truncedRight === right) {
+      // not a floating number
+      return 0;
+    } else if (truncedLeft === left || truncedRight === right) {
+      // just one value is floating
+      return 1;
+    }
+
+    const truncToFixedMax = 20;
+    const leftZero = (left - truncedLeft).toFixed(truncToFixedMax);
+    const rightZero = (right - truncedRight).toFixed(truncToFixedMax);
+
+    for (let i = 0; i < leftZero.length; i++) {
+      if (leftZero.charAt(i) !== rightZero.charAt(i)) {
+        return i;
+      }
+    }
+
+    return truncToFixedMax;
   }
 
   ngOnInit() {
