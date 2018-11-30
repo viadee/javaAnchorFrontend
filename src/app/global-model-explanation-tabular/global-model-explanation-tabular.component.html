@@ -12,15 +12,15 @@
       </thead>
       <tbody>
       <tr *ngFor="let rowIndex of rowRange">
-        <th scope="row">Anchor</th>
-        <th scope="row">{{ rowIndex + 1 }}</th>
+        <th scope="row" class="header">Anchor</th>
+        <th scope="row" class="header">{{ rowIndex + 1 }}</th>
         <td>{{ predictions[rowIndex] }}</td>
-        <td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column && column[0] > 0}">{{ (column && column[0] || 0) }}</td>
-        <!--<td *ngFor="let column of globalAnchorTable[rowIndex]" [style.backgroundColor]="column && column[1] || '#FFF'">{{ (column && column[0] || 0) }}</td>-->
-        <td>{{ coverage[rowIndex] }}</td>
-        <td>{{ precision[rowIndex] }}</td>
+        <!--<td *ngFor="let column of globalAnchorTable[rowIndex]" [ngClass]="{'bg-primary': column && column[0] > 0}">{{ (column && column[0] || 0) }}</td>-->
+        <td *ngFor="let column of globalAnchorTable[rowIndex]" [style.backgroundColor]="column && column[1] || '#FFF'">{{ (column && column[0] || 0) }}</td>
+        <td class="header">{{ coverage[rowIndex] }}</td>
+        <td class="header">{{ precision[rowIndex] }}</td>
       </tr>
-      <tr class="bg-success">
+      <tr class="header">
         <th scope="row" colspan="3">Exact Coverage</th>
         <!--<td [attr.colspan]="anchorPredicates.length + 1"></td>-->
         <td *ngFor="let exactCoverage of exactCoverages">{{ exactCoverage }}</td>

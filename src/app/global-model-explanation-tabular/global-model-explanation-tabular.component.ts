@@ -12,8 +12,8 @@ import {AnchorPredicate} from '../_models/AnchorPredicate';
 })
 export class GlobalModelExplanationTabularComponent implements OnInit {
 
-  color1 = [255, 23, 62];
-  color2 = [32, 44, 179];
+  color1 = [224, 0, 0];
+  color2 = [255, 225, 221];
 
   PRECISION_FRACTION_DIGITS = 3;
   COVERAGE_FRACTION_DIGITS = 3;
@@ -100,7 +100,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
                                             predicate: AnchorPredicate) {
     if (this.isSameFeatureCondition(header, predicate)) {
       this.exactCoverages[columnIndex] = predicate.exactCoverage.toFixed(this.COVERAGE_FRACTION_DIGITS);
-      this.addToTable(rowIndex, columnIndex, topOrBottom, predicate.addedPrecision.toFixed(this.PRECISION_FRACTION_DIGITS));
+      this.addToTable(rowIndex, columnIndex, topOrBottom, predicate.addedPrecision);
     }
   }
 
@@ -121,7 +121,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     }
   }
 
-  private addToTable(row: number, column: number, topOrBottom: number, addedPrecision: string): void {
+  private addToTable(row: number, column: number, topOrBottom: number, addedPrecision: number): void {
     if (this.globalAnchorTable === null) {
       this.globalAnchorTable = [];
     }
@@ -132,7 +132,10 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     rowData = this.globalAnchorTable[row];
     let cell = rowData[column];
     if (!cell) {
-      cell = [addedPrecision, this.pickGradientHex(addedPrecision, topOrBottom)];
+      cell = [
+        addedPrecision.toFixed(this.PRECISION_FRACTION_DIGITS),
+        this.pickGradientHex(addedPrecision, topOrBottom)
+      ];
     }
     // cell++;
     rowData[column] = cell;
@@ -203,23 +206,23 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     return condition.columnType === 'string';
   }
 
-  private pickGradientHex(weight, topOrBottom: number) {
+  private pickGradientHex(weight: number, topOrBottom: number) {
     if (!weight) {
       return 0;
     }
     const w1 = weight;
     const w2 = 1 - w1;
-    // return this.rgbToHex(Math.round(this.color1[0] * w1 + this.color2[0] * w2),
-    //   Math.round(this.color1[1] * w1 + this.color2[1] * w2),
-    //   Math.round(this.color1[2] * w1 + this.color2[2] * w2));
-    return this.rgbToHex(255, 255, 255);
+    return this.rgbToHex(Math.round(this.color1[0] * w1 + this.color2[0] * w2),
+      Math.round(this.color1[1] * w1 + this.color2[1] * w2),
+      Math.round(this.color1[2] * w1 + this.color2[2] * w2));
+    // return this.rgbToHex(255, 255, 255);
   }
 
-  private rgbToHex(r, g, b) {
+  private rgbToHex(r: number, g: number, b: number) {
     return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
 
-  private componentToHex(c) {
+  private componentToHex(c: number) {
     const hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
   }
