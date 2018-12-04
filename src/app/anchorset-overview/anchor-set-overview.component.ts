@@ -30,6 +30,9 @@ export class AnchorSetOverviewComponent implements OnInit {
 
   settings = {
     columns: {
+      label: {
+        title: 'Label'
+      },
       prediction: {
         title: 'Prediction'
       },
@@ -48,12 +51,18 @@ export class AnchorSetOverviewComponent implements OnInit {
         type: 'custom',
         renderComponent: ListRenderComponent,
       },
-      conditions: {
-        title: 'Instance conditions',
+      instance: {
+        title: 'Instance',
         filter: false,
         type: 'custom',
         renderComponent: ListRenderComponent,
       },
+      // conditions: {
+      //   title: 'Instance conditions',
+      //   filter: false,
+      //   type: 'custom',
+      //   renderComponent: ListRenderComponent,
+      // },
     },
     actions: {
       add: false,
@@ -184,27 +193,32 @@ export class AnchorSetOverviewComponent implements OnInit {
       conditions.push(key + ' = (' + metricCondition.conditionMin + ', ' + metricCondition.conditionMax + ')');
     }
 
-    return new CompressedAnchor(anchor.coverage, anchorExpl, anchor.precision, anchor.prediction, anchor.affected_rows,
-      conditions);
+    return new CompressedAnchor(anchor.label_of_case, anchor.coverage, anchorExpl, anchor.precision, anchor.prediction,
+      anchor.affected_rows, conditions, anchor.instance);
   }
 
 }
 
 
 class CompressedAnchor {
+  label: any;
   coverage: number;
   anchor: String[];
   precision: number;
   prediction: any;
   affected_rows: number;
   conditions: string[];
+  instance: any;
 
-  constructor(coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number, conditions: string[]) {
+  constructor(label: any, coverage: number, anchor: String[], precision: number, prediction: any, affected_rows: number,
+              conditions: string[], instance: any) {
+    this.label = label;
     this.coverage = coverage;
     this.anchor = anchor;
     this.precision = precision;
     this.prediction = prediction;
     this.affected_rows = affected_rows;
     this.conditions = conditions;
+    this.instance = instance;
   }
 }
