@@ -83,7 +83,6 @@ export class AnchorSetOverviewComponent implements OnInit {
               private _spinner: NgxSpinnerService) {
     this.source = new LocalDataSource();
 
-
     this._globals.checkQueryParams(route, (conn) => {
       if (conn !== null) {
         this.conn = conn;
@@ -198,7 +197,6 @@ export class AnchorSetOverviewComponent implements OnInit {
   }
 
 }
-
 
 class CompressedAnchor {
   label: any;

@@ -1,20 +1,21 @@
 <div class="jumbotron text-center">
   <h1>MAvA: Model Analysis via Anchor</h1>
-  <p>The Cake is a Lie</p>
+  <p>This application aims to retrieve the patterns that a machine learning model has learned and make them
+    understandable to people.<br />
+  In addition, there is the possibility of finding several useful "anchors" in an automatic process.</p>
+  <p>The Anchors tool is used for this purpose.</p>
+  <p>The data as well as the models must be made available via the ML platform H2O.</p>
+  <p>Used libraries:</p>
+    <a href="https://github.com/viadee/javaAnchorFrontend" >javaAnchorFrontend</a> &nbsp;
+    <a href="https://github.com/viadee/javaAnchorServer">javaAnchorServer</a> &nbsp;
+    <a href="https://github.com/viadee/javaAnchorAdapters">javaAnchorAdapters</a> &nbsp;
+    <a href="https://github.com/viadee/javaAnchorExplainer">javaAnchorExplainer</a>
 </div>
 
 <div class="col-12 mt-5">
   <div class="col-12">
     <app-select-model (connectionInfo)="selectedConnection($event)"></app-select-model>
   </div>
-  <!--<div class="row" *ngIf="frameSummary !== undefined">-->
-    <!--<div class="col-3">-->
-      <!--<label>Frame-Id:&nbsp;</label>{{ frameSummary.frame_id }}-->
-    <!--</div>-->
-    <!--<div class="col-2">-->
-      <!--<label>Rows:&nbsp;</label>{{ frameSummary.row_count }}-->
-    <!--</div>-->
-  <!--</div>-->
   <div class="col-12">
     <app-column-info [columns]="frameSummary.column_summary_list" *ngIf="frameSummary !== undefined"></app-column-info>
   </div>
