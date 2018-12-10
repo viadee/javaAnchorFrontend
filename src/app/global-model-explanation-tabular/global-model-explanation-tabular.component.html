@@ -6,8 +6,8 @@
         <th scope="col" colspan="2">#</th>
         <th>Prediction</th>
         <th *ngFor="let condition of anchorPredicates" scope="col">{{ condition.featureName + ': ' + getFeatureConditionTitle(condition) }}</th>
-        <th>Coverage</th>
-        <th>Precision</th>
+        <th style="white-space: nowrap;">Coverage <img src="../../assets/Help-and-Support-icon.png" width="18em" data-toggle="tooltip" title="This value is determined when the anchor is calculated and is based on statistical methods. If this value seems to be wrong, the sample size should be increased."></th>
+        <th style="white-space: nowrap;">Precision <img src="../../assets/Help-and-Support-icon.png" width="18em" data-toggle="tooltip" title="This value is determined when the anchor is calculated and is based on statistical methods. If this value seems to be wrong, the sample size should be increased."></th>
       </tr>
       </thead>
       <tbody>
@@ -20,7 +20,7 @@
         <td class="header">{{ coverage[rowIndex] }}</td>
         <td class="header">{{ precision[rowIndex] }}</td>
       </tr>
-      <tr class="header">
+      <tr class="header" style="border-top: 2px solid black;">
         <th scope="row" colspan="3">Exact Coverage</th>
         <!--<td [attr.colspan]="anchorPredicates.length + 1"></td>-->
         <td *ngFor="let exactCoverage of exactCoverages">{{ exactCoverage }}</td>
