@@ -115,6 +115,49 @@ export class AnchorSetOverviewComponent implements OnInit {
     });
   }
 
+  private static transformAnchors(anchors: Anchor[]): CompressedAnchor[] {
+    const transformedAnchors = new Array<CompressedAnchor>(anchors.length);
+    for (let i = 0; i < anchors.length; i++) {
+      transformedAnchors[i] = AnchorSetOverviewComponent.transformAnchor(anchors[i]);
+    }
+
+    return transformedAnchors;
+  }
+
+  private static transformAnchor(anchor: Anchor): CompressedAnchor {
+    if (!anchor.predicates) {
+      anchor.predicates = {};
+    }
+    const predicateKeys: string[] = Object.keys(anchor.predicates);
+
+    const anchorSize = predicateKeys.length;
+    const anchorExpl = new Array<String>(anchorSize);
+    for (let i = 0; i < predicateKeys.length; i++) {
+      if (predicateKeys[i] !== undefined && anchor.predicates.hasOwnProperty(predicateKeys[i])) {
+        const condition = anchor.predicates[predicateKeys[i]];
+        anchorExpl.push(condition.featureName + ' = ' + condition.category);
+      }
+    }
+
+    const enumConditions = anchor.condition.enumConditions;
+    const enumConditionKeys = Object.keys(enumConditions);
+    const metricConditions = anchor.condition.metricConditions;
+    const metricConditionKeys = Object.keys(metricConditions);
+    const conditionLength = enumConditionKeys.length + metricConditionKeys.length;
+
+    const conditions = new Array<string>(conditionLength);
+    for (const key of enumConditionKeys) {
+      conditions.push(key + ' = ' + enumConditions[key].category);
+    }
+    for (const key of metricConditionKeys) {
+      const metricCondition = metricConditions[key];
+      conditions.push(key + ' = (' + metricCondition.conditionMin + ', ' + metricCondition.conditionMax + ')');
+    }
+
+    return new CompressedAnchor(anchor.label_of_case, anchor.coverage, anchorExpl, anchor.precision, anchor.prediction,
+      anchor.affected_rows, conditions, anchor.instance);
+  }
+
   ngOnInit() {
   }
 
@@ -139,61 +182,7 @@ export class AnchorSetOverviewComponent implements OnInit {
   }
 
   private updateAnchorsList() {
-    this.source.load(this.transformAnchors(this._globals.getAnchors()));
-  }
-
-  private transformAnchors(anchors: Anchor[]): CompressedAnchor[] {
-    const transformedAnchors = new Array<CompressedAnchor>(anchors.length);
-    for (let i = 0; i < anchors.length; i++) {
-      transformedAnchors[i] = this.transformAnchor(anchors[i]);
-    }
-
-    return transformedAnchors;
-  }
-
-  private transformAnchor(anchor: Anchor): CompressedAnchor {
-    if (!anchor.metricPredicate) {
-      anchor.metricPredicate = {};
-    }
-    if (!anchor.enumPredicate) {
-      anchor.enumPredicate = {};
-    }
-    const metricKeys: string[] = Object.keys(anchor.metricPredicate);
-    const enumKeys: string[] = Object.keys(anchor.enumPredicate);
-
-    const anchorSize = metricKeys.length + enumKeys.length;
-    const anchorExpl = new Array<String>(anchorSize);
-    for (let i = 0; i < enumKeys.length; i++) {
-      if (enumKeys[i] !== undefined && anchor.enumPredicate.hasOwnProperty(enumKeys[i])) {
-        const condition = anchor.enumPredicate[enumKeys[i]];
-        anchorExpl.push(condition.featureName + ' = ' + condition.category);
-      }
-    }
-    for (let i = 0; i < metricKeys.length; i++) {
-      if (metricKeys[i] !== undefined && anchor.metricPredicate.hasOwnProperty(metricKeys[i])) {
-        const condition = anchor.metricPredicate[metricKeys[i]];
-        anchorExpl.push(condition.featureName + ' = (' + condition.conditionMin +
-          ', ' + condition.conditionMax + ')');
-      }
-    }
-
-    const enumConditions = anchor.condition.enumConditions;
-    const enumConditionKeys = Object.keys(enumConditions);
-    const metricConditions = anchor.condition.metricConditions;
-    const metricConditionKeys = Object.keys(metricConditions);
-    const conditionLength = enumConditionKeys.length + metricConditionKeys.length;
-
-    const conditions = new Array<string>(conditionLength);
-    for (const key of enumConditionKeys) {
-      conditions.push(key + ' = ' + enumConditions[key].category);
-    }
-    for (const key of metricConditionKeys) {
-      const metricCondition = metricConditions[key];
-      conditions.push(key + ' = (' + metricCondition.conditionMin + ', ' + metricCondition.conditionMax + ')');
-    }
-
-    return new CompressedAnchor(anchor.label_of_case, anchor.coverage, anchorExpl, anchor.precision, anchor.prediction,
-      anchor.affected_rows, conditions, anchor.instance);
+    this.source.load(AnchorSetOverviewComponent.transformAnchors(this._globals.getAnchors()));
   }
 
 }

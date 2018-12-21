@@ -1,6 +1,5 @@
 import {FeatureConditionRequest} from './FeatureConditionRequest';
-import {AnchorPredicateMetric} from './AnchorPredicateMetric';
-import {AnchorPredicateEnum} from './AnchorPredicateEnum';
+import {AnchorPredicate} from './AnchorPredicate';
 
 export interface Anchor {
   model_id: string;
@@ -9,14 +8,9 @@ export interface Anchor {
   features: Array<number>;
   instance: { [id: string]: any };
   label_of_case: string;
-  metricPredicate: { [id: number]: AnchorPredicateMetric };
-  enumPredicate: { [id: number]: AnchorPredicateEnum };
+  predicates: { [id: number]: AnchorPredicate };
   precision: number;
   prediction: any;
   affected_rows: number;
   condition: FeatureConditionRequest;
-}
-
-{
-
 }

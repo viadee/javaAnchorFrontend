@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {FrameSummary} from '../_models/FrameSummary';
 import {Anchor} from '../_models/Anchor';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
@@ -69,15 +69,15 @@ export class GlobalVariablesComponent {
 
   public checkQueryParams(route: ActivatedRoute, callback): void {
     route.queryParams.forEach(value => {
-      let server = value.server;
-      let model_id = value.model_id;
-      let frame_id = value.frame_id;
+      const server = value.server;
+      const model_id = value.model_id;
+      const frame_id = value.frame_id;
       if (server == null && model_id == null && frame_id == null) {
         callback(null);
         return;
       }
 
-      let conn = new ConnectionInfo(server, model_id, frame_id);
+      const conn = new ConnectionInfo(server, model_id, frame_id);
       if (!conn.equals(this.connection)) {
         this.updateConnectionInfo(conn);
       }

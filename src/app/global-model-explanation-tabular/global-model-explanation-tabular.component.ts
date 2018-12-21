@@ -1,8 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Anchor} from '../_models/Anchor';
 import {SubmodularPickResult} from '../_models/SubmodularPickResult';
-import {AnchorPredicateMetric} from '../_models/AnchorPredicateMetric';
-import {AnchorPredicateEnum} from '../_models/AnchorPredicateEnum';
 import {AnchorPredicate} from '../_models/AnchorPredicate';
 
 @Component({
@@ -65,18 +63,13 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       const anchor = anchors[rowIndex];
       this.predictions.push(anchor.prediction);
 
-      const metricKeys = Object.keys(anchor.metricPredicate);
-      const enumKeys = Object.keys(anchor.enumPredicate);
+      const predicateKeys = Object.keys(anchor.predicates);
       for (let columnIndex = 0; columnIndex < this.anchorPredicates.length; columnIndex++) {
         const header = this.anchorPredicates[columnIndex];
 
-        for (let index = 0; index < metricKeys.length; index++) {
-          const metricPredicate: AnchorPredicate = anchor.metricPredicate[metricKeys[index]];
+        for (let index = 0; index < predicateKeys.length; index++) {
+          const metricPredicate: AnchorPredicate = anchor.predicates[predicateKeys[index]];
           this.checkAnchorPredicateAndAddToTable(columnIndex, rowIndex, topOrBottom, header, metricPredicate);
-        }
-        for (let index = 0; index < enumKeys.length; index++) {
-          const enumPredicate: AnchorPredicate = anchor.enumPredicate[enumKeys[index]];
-          this.checkAnchorPredicateAndAddToTable(columnIndex, rowIndex, topOrBottom, header, enumPredicate);
         }
       }
 
@@ -110,13 +103,12 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
 
   getFeatureConditionTitle(condition: AnchorPredicate): string {
     if (this.isMetricCondition(condition)) {
-      const metricCon = <AnchorPredicateMetric>condition;
-      const roundLength = this.round(metricCon.conditionMin, metricCon.conditionMax);
-      return '(' + metricCon.conditionMin.toFixed(roundLength) + ', ' + metricCon.conditionMax.toFixed(roundLength) + ')';
+      const roundLength = this.round(condition.conditionMin, condition.conditionMax);
+      return '(' + condition.conditionMin.toFixed(roundLength) + ', ' + condition.conditionMax.toFixed(roundLength) + ')';
     } else if (this.isEnumCondition(condition)) {
-      return (<AnchorPredicateEnum>condition).category;
+      return condition.categoricalValue;
     } else {
-      console.log('unhandled column type: ' + condition.columnType);
+      console.log('unhandled column type: ' + condition.featureType);
       // TODO throw error
     }
   }
@@ -146,15 +138,11 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     if (!anchors) {
       return;
     }
-    for (const anchor of anchors) {
-      const metricKeys = Object.keys(anchor.metricPredicate);
-      const enumKeys = Object.keys(anchor.enumPredicate);
-      for (const key of metricKeys) {
 
-        this.isInFeatureConditionList(anchor.metricPredicate[key]);
-      }
-      for (const key of enumKeys) {
-        this.isInFeatureConditionList(anchor.enumPredicate[key]);
+    for (const anchor of anchors) {
+      const predicateKeys = Object.keys(anchor.predicates);
+      for (const key of predicateKeys) {
+        this.isInFeatureConditionList(anchor.predicates[key]);
       }
     }
   }
@@ -180,30 +168,19 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
       return false;
     }
 
-    if (conditionLeft.columnType === conditionRight.columnType
-      && conditionLeft.featureName === conditionRight.featureName) {
-      if (this.isMetricCondition(conditionLeft)) {
-        const metricConditionLeft = <AnchorPredicateMetric>conditionLeft;
-        const metricConditionRight = <AnchorPredicateMetric>conditionRight;
-        return metricConditionLeft.conditionMin === metricConditionRight.conditionMin
-          && metricConditionLeft.conditionMax === metricConditionRight.conditionMax;
-      } else if (this.isEnumCondition(conditionLeft)) {
-        return (<AnchorPredicateEnum>conditionLeft).category === (<AnchorPredicateEnum>conditionRight).category;
-      } else {
-        console.log('unhandled column type: ' + conditionLeft.columnType);
-        // TODO handle error
-      }
-    }
-
-    return false;
+    return conditionLeft.featureType === conditionRight.featureType
+      && conditionLeft.featureName === conditionRight.featureName
+      && conditionLeft.conditionMin === conditionRight.conditionMin
+      && conditionLeft.conditionMax === conditionRight.conditionMax
+      && conditionLeft.categoricalValue === conditionRight.categoricalValue;
   }
 
   private isMetricCondition(condition: AnchorPredicate): boolean {
-    return condition.columnType === 'metric';
+    return condition.featureType === 'metric';
   }
 
   private isEnumCondition(condition: AnchorPredicate): boolean {
-    return condition.columnType === 'string';
+    return condition.featureType === 'string';
   }
 
   private pickGradientHex(weight: number, topOrBottom: number) {
