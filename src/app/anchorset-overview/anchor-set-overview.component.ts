@@ -12,6 +12,7 @@ import {FrameApiService} from '../_service/frame-api.service';
 import {FrameColumnApiService} from '../_service/frame-column-api.service';
 import {AnchorApiService} from '../_service/anchor-api.service';
 import {ConnectionInfo} from '../_models/ConnectionInfo';
+import {AnchorUtil} from '../_helpers/AnchorUtil';
 
 @Component({
   selector: 'app-anchorset-overview',
@@ -135,7 +136,14 @@ export class AnchorSetOverviewComponent implements OnInit {
     for (let i = 0; i < predicateKeys.length; i++) {
       if (predicateKeys[i] !== undefined && anchor.predicates.hasOwnProperty(predicateKeys[i])) {
         const condition = anchor.predicates[predicateKeys[i]];
-        anchorExpl.push(condition.featureName + ' = ' + condition.category);
+        if (AnchorUtil.isPredicateEnum(condition)) {
+          anchorExpl.push(condition.featureName + ' = ' + condition.categoricalValue);
+        } else if (AnchorUtil.isPredicateMetric(condition)) {
+          anchorExpl.push(condition.featureName + ' = (' + condition.conditionMin +
+            ', ' + condition.conditionMax + ')');
+        } else {
+          console.log("Type of condition " + condition.featureType + " unknown");
+        }
       }
     }
 

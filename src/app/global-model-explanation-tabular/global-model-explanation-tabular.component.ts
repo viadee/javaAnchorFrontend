@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Anchor} from '../_models/Anchor';
 import {SubmodularPickResult} from '../_models/SubmodularPickResult';
 import {AnchorPredicate} from '../_models/AnchorPredicate';
+import {AnchorUtil} from '../_helpers/AnchorUtil';
 
 @Component({
   selector: 'app-global-model-explanation-tabular',
@@ -48,7 +49,7 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
     if (!anchors || anchors.length <= 0) {
       return;
     }
-    anchors = anchors.sort((left, right) => this.compareAnchor(left, right));
+    anchors = anchors.sort((left, right) => AnchorUtil.compareAnchorByPrediction(left, right));
     this.computeColumns(anchors);
 
     this.globalAnchorTable = null;
@@ -91,26 +92,14 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
                                             topOrBottom: number,
                                             header: AnchorPredicate,
                                             predicate: AnchorPredicate) {
-    if (this.isSameFeatureCondition(header, predicate)) {
+    if (AnchorUtil.isSameFeatureCondition(header, predicate)) {
       this.exactCoverages[columnIndex] = predicate.exactCoverage.toFixed(this.COVERAGE_FRACTION_DIGITS);
       this.addToTable(rowIndex, columnIndex, topOrBottom, predicate.addedPrecision);
     }
   }
 
-  compareAnchor(left: Anchor, right: Anchor): number {
-    return left.prediction < right.prediction ? -1 : left.prediction === right.prediction ? 0 : 1;
-  }
-
-  getFeatureConditionTitle(condition: AnchorPredicate): string {
-    if (this.isMetricCondition(condition)) {
-      const roundLength = this.round(condition.conditionMin, condition.conditionMax);
-      return '(' + condition.conditionMin.toFixed(roundLength) + ', ' + condition.conditionMax.toFixed(roundLength) + ')';
-    } else if (this.isEnumCondition(condition)) {
-      return condition.categoricalValue;
-    } else {
-      console.log('unhandled column type: ' + condition.featureType);
-      // TODO throw error
-    }
+  public getFeatureConditionTitle(condition: AnchorPredicate): string {
+    return AnchorUtil.getFeatureConditionTitle(condition);
   }
 
   private addToTable(row: number, column: number, topOrBottom: number, addedPrecision: number): void {
@@ -148,39 +137,9 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   }
 
   private isInFeatureConditionList(condition: AnchorPredicate): void {
-    if (!this.containsFeatureCondition(this.anchorPredicates, condition)) {
+    if (!AnchorUtil.containsFeatureCondition(this.anchorPredicates, condition)) {
       this.anchorPredicates.push(condition);
     }
-  }
-
-  private containsFeatureCondition(conditions: Array<AnchorPredicate>, condition: AnchorPredicate): boolean {
-    for (const conditionInList of conditions) {
-      if (this.isSameFeatureCondition(condition, conditionInList)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private isSameFeatureCondition(conditionLeft: AnchorPredicate, conditionRight: AnchorPredicate): boolean {
-    if (conditionLeft === null || conditionRight === null) {
-      return false;
-    }
-
-    return conditionLeft.featureType === conditionRight.featureType
-      && conditionLeft.featureName === conditionRight.featureName
-      && conditionLeft.conditionMin === conditionRight.conditionMin
-      && conditionLeft.conditionMax === conditionRight.conditionMax
-      && conditionLeft.categoricalValue === conditionRight.categoricalValue;
-  }
-
-  private isMetricCondition(condition: AnchorPredicate): boolean {
-    return condition.featureType === 'metric';
-  }
-
-  private isEnumCondition(condition: AnchorPredicate): boolean {
-    return condition.featureType === 'string';
   }
 
   private pickGradientHex(weight: number, topOrBottom: number) {
@@ -202,36 +161,6 @@ export class GlobalModelExplanationTabularComponent implements OnInit {
   private componentToHex(c: number) {
     const hex = c.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
-  }
-
-  /**
-   * Finds the index in which the floating number differs even if the pre dot value is not the same.
-   *
-   * @param left
-   * @param right
-   */
-  private round(left: number, right: number): number {
-    const truncedLeft = Math.trunc(left);
-    const truncedRight = Math.trunc(right);
-    if (truncedLeft === left && truncedRight === right) {
-      // not a floating number
-      return 0;
-    } else if (truncedLeft === left || truncedRight === right) {
-      // just one value is floating
-      return 1;
-    }
-
-    const truncToFixedMax = 20;
-    const leftZero = (left - truncedLeft).toFixed(truncToFixedMax);
-    const rightZero = (right - truncedRight).toFixed(truncToFixedMax);
-
-    for (let i = 0; i < leftZero.length; i++) {
-      if (leftZero.charAt(i) !== rightZero.charAt(i)) {
-        return i;
-      }
-    }
-
-    return truncToFixedMax;
   }
 
   ngOnInit() {
