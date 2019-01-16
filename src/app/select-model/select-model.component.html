@@ -13,11 +13,21 @@
       </div>
       <div class="col-lg-4">
         <div class="form-group">
-          <label for="model">Select Model:</label>
-          <select class="form-control" id="model" formControlName="model" (change)="modelSelectionChanged($event)">
-            <option *ngFor="let model of models" [ngValue]="model" [selected]="model === getModel()">{{model.name}}
-            </option>
-          </select>
+          <label for="groupByModel">Group by Model:</label>
+          <input type="text" id="groupByModel" onkeyup="filterModelsAndFrames($event)" placeholder="Search for names..">
+
+          <ul id="ulGroupByModel">
+            <% let s in models %>
+            <li><a href="#">Adele</a></li>
+            <li><a href="#">Agnes</a></li>
+
+            <li><a href="#">Billy</a></li>
+            <li><a href="#">Bob</a></li>
+
+            <li><a href="#">Calvin</a></li>
+            <li><a href="#">Christina</a></li>
+            <li><a href="#">Cindy</a></li>
+          </ul>
         </div>
       </div>
       <div class="col-lg-4">

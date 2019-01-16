@@ -21,6 +21,19 @@ export class SelectModelComponent implements OnInit {
   paramModelId;
   paramFrameId;
 
+  modelForm: FormGroup;
+
+  servers: Array<string> = [];
+  private _models: Model[];
+  private _frames: DataFrame[];
+
+  private modelsLoaded: boolean;
+  private framesLoaded: boolean;
+
+  private modelFrameList: Array<Object>;
+
+  @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _clusterApi: ClusterApiService,
@@ -38,31 +51,34 @@ export class SelectModelComponent implements OnInit {
     });
   }
 
-  modelForm: FormGroup;
-
-  servers: String[] = [];
-  private _models: Model[];
-  private _frames: DataFrame[];
-
-  private modelsLoaded: boolean;
-  private framesLoaded: boolean;
-
-  @Output() connectionInfo = new EventEmitter<ConnectionInfo>();
-
   ngOnInit() {
-    this.servers.push('local-H2O');
-
+    this.loadConnectionNames();
     this.modelForm = new FormGroup({
       server: new FormControl(this.paramServer),
       model: new FormControl({value: '', disabled: true}),
       frame: new FormControl({value: '', disabled: true})
     });
+  }
 
-    if (this.paramServer !== undefined && this.paramServer !== null) {
-      // this.loadModels();
-      // this.loadFrames();
-      this.loadModelsAndFrames(null);
-    }
+  filterModelsAndFrames(event) {
+
+  }
+
+  loadConnectionNames() {
+    this._spinner.show();
+    this._clusterApi.getConnectionNames().subscribe((response) => {
+      this._spinner.hide();
+
+      if (response !== undefined && response !== null) {
+        this.servers = response.connectionNames;
+
+        if (this.paramServer !== undefined && this.paramServer !== null) {
+          this.loadModelsAndFrames(null);
+        }
+      }
+    }, err => {
+      console.log('Error: ' + err.message);
+    })
   }
 
   public loadModelsAndFrames(event) {
@@ -84,6 +100,19 @@ export class SelectModelComponent implements OnInit {
     });
   }
 
+  private updateModelFrameDropDown() {
+    this.modelFrameList = [];
+    for (let model of this._models) {
+      let first = false;
+      for (let frame of model.compatibleFrames) {
+        if (!first) {
+          this.modelFrameList.push(model);
+        }
+        this.modelFrameList.push(frame);
+      }
+    }
+  }
+
   public modelSelectionChanged(event) {
     if (this.frames.includes(this.getModel().data_frame)) {
       this.setFrame(this.getModel().data_frame);
@@ -95,7 +124,7 @@ export class SelectModelComponent implements OnInit {
       .getModels(this.getServer()).subscribe((response) => {
       this.models = response;
       if (this.models == null) {
-        const no_models_available = new Model(null, 'no models available', null, null);
+        const no_models_available = new Model(null, 'no models available', null, null, null, null);
         this.models = [no_models_available];
       } else {
         this.modelForm.controls.model.enable();
@@ -110,6 +139,7 @@ export class SelectModelComponent implements OnInit {
       this.modelsLoaded = true;
       this.checkLoadedData();
     }, (err) => {
+      console.log('Error: ' + err.message);
       this._spinner.hide();
     });
   }
@@ -133,6 +163,7 @@ export class SelectModelComponent implements OnInit {
       this.framesLoaded = true;
       this.checkLoadedData();
     }, (err) => {
+      console.log('Error: ' + err.message);
       this._spinner.hide();
     });
   }
