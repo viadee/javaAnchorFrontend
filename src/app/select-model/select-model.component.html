@@ -11,34 +11,28 @@
           </select>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-8">
         <div class="form-group">
-          <label for="groupByModel">Group by Model:</label>
-          <input type="text" id="groupByModel" onkeyup="filterModelsAndFrames($event)" placeholder="Search for names..">
-
-          <ul id="ulGroupByModel">
-            <% let s in models %>
-            <li><a href="#">Adele</a></li>
-            <li><a href="#">Agnes</a></li>
-
-            <li><a href="#">Billy</a></li>
-            <li><a href="#">Bob</a></li>
-
-            <li><a href="#">Calvin</a></li>
-            <li><a href="#">Christina</a></li>
-            <li><a href="#">Cindy</a></li>
-          </ul>
+          <!--<label for="groupByModel">Group by Model:</label>-->
+          <div class="list-group">
+            <div *ngFor="let model of models">
+              <span class="badge badge-secondary">{{ model.name }}</span>
+              <div *ngFor="let frame of model.compatibleFrames">
+                <button>{{ frame.name }}</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="form-group">
-          <label for="frame">Select Frame:</label>
-          <select class="form-control" id="frame" formControlName="frame">
-            <option *ngFor="let frame of frames" [ngValue]="frame" [selected]="frame === getFrame()">{{ frame.name }}
-            </option>
-          </select>
-        </div>
-      </div>
+      <!--<div class="col-lg-4">-->
+      <!--<div class="form-group">-->
+      <!--<label for="frame">Select Frame:</label>-->
+      <!--<select class="form-control" id="frame" formControlName="frame">-->
+      <!--<option *ngFor="let frame of frames" [ngValue]="frame" [selected]="frame === getFrame()">{{ frame.name }}-->
+      <!--</option>-->
+      <!--</select>-->
+      <!--</div>-->
+      <!--</div>-->
       <div class="col-lg-1">
         <div class="form-group" style="margin-top: 30px">
           <!--<button type="submit" class="btn btn-success">Select</button>-->

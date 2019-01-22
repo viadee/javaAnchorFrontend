@@ -78,7 +78,7 @@ export class SelectModelComponent implements OnInit {
       }
     }, err => {
       console.log('Error: ' + err.message);
-    })
+    });
   }
 
   public loadModelsAndFrames(event) {

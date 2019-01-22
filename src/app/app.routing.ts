@@ -5,7 +5,7 @@ import {GlobalModelExplanationOverviewComponent} from './global-model-explanatio
 import {IndexComponent} from './index/index.component';
 
 const appRoutes: Routes = [
-  {path: '', redirectTo: 'model-frame-overview', pathMatch: 'full'},
+  {path: '', redirectTo: 'index', pathMatch: 'full'},
   {path: 'index', component: IndexComponent},
   {path: 'model-frame-overview', component: ModelFrameOverviewComponent},
   {path: 'anchorset-overview', component: AnchorSetOverviewComponent},
