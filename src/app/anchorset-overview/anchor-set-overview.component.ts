@@ -142,7 +142,7 @@ export class AnchorSetOverviewComponent implements OnInit {
           anchorExpl.push(condition.featureName + ' = (' + condition.conditionMin +
             ', ' + condition.conditionMax + ')');
         } else {
-          console.log("Type of condition " + condition.featureType + " unknown");
+          console.log('Type of condition ' + condition.featureType + ' unknown');
         }
       }
     }
