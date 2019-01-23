@@ -4,7 +4,7 @@
       <div class="col-lg-3">
         <div class="form-group">
           <label for="server">Select Server:</label>
-          <select class="form-control" id="server" formControlName="server" (change)="loadModelsAndFrames($event)">
+          <select class="form-control" id="server" formControlName="server" (change)="tryConnectAndLoadModels($event)">
             <option *ngFor="let instance of servers" [ngValue]="instance" [selected]="instance === getServer()">{{
               instance }}
             </option>
@@ -14,30 +14,17 @@
       <div class="col-lg-8">
         <div class="form-group">
           <!--<label for="groupByModel">Group by Model:</label>-->
-          <div class="list-group">
-            <div *ngFor="let model of models">
-              <span class="badge badge-secondary">{{ model.name }}</span>
+          <div class="list-group list-group-flush">
+            <label for="server">Select Model and Frame:</label>
+            <input class="form-control mb-2" type="text" placeholder="Filter Models and Frames" id="frameFilter" formControlName="frameFilter" (keyup)="filterFramesInModels($event)">
+            <div class="border" *ngFor="let model of filteredModels">
+              <h6 class="list-group-item">{{ model.name }}</h6>
               <div *ngFor="let frame of model.compatibleFrames">
-                <button>{{ frame.name }}</button>
+                <a routerLink="/model-frame-overview" class="list-group-item list-group-item-action text-dark pl-5"
+                   [queryParams]="{server: getServer(), model_id: model.name, frame_id: frame}">{{ frame }}</a>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!--<div class="col-lg-4">-->
-      <!--<div class="form-group">-->
-      <!--<label for="frame">Select Frame:</label>-->
-      <!--<select class="form-control" id="frame" formControlName="frame">-->
-      <!--<option *ngFor="let frame of frames" [ngValue]="frame" [selected]="frame === getFrame()">{{ frame.name }}-->
-      <!--</option>-->
-      <!--</select>-->
-      <!--</div>-->
-      <!--</div>-->
-      <div class="col-lg-1">
-        <div class="form-group" style="margin-top: 30px">
-          <!--<button type="submit" class="btn btn-success">Select</button>-->
-          <a routerLink="/model-frame-overview" class="btn btn-dark"
-             [queryParams]="{server: getServer(), model_id: getModel().model_id, frame_id: getFrame().frame_id}">Summarize</a>
         </div>
       </div>
     </div>

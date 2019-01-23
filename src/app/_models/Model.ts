@@ -7,7 +7,7 @@ export class Model {
     public name: string,
     public url: string,
     public data_frame: DataFrame,
-    public compatibleFrames: Array<DataFrame>,
+    public compatibleFrames: Array<string>,
     public ignoredColumns: Array<string>) {
 
   }
