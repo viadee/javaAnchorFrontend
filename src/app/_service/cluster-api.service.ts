@@ -3,6 +3,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
+import {ConnectionNameListResponse} from '../_models/ConnectionNameListResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class ClusterApiService {
       );
   }
 
-  getConnectionNames(): Observable<Array<string>> {
-    return this.http.get<string[]>(
+  getConnectionNames(): Observable<ConnectionNameListResponse> {
+    return this.http.get<ConnectionNameListResponse>(
       `${BackendApiService.getBackendUrlClean()}`,
       BackendApiService.getHttpOptions()
     );
