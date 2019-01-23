@@ -103,8 +103,6 @@ export class SelectModelComponent implements OnInit {
   public loadModels() {
     this._modelApi
       .getModels(this.getServer()).subscribe((response) => {
-        response.push(new Model('id', 'name', 'url', null, ['frame'], []));
-        response.push(new Model('id2', 'name2', 'url2', null, ['frame1', 'frame2', 'frame3'], []));
         this.models = response;
         if (this.models == null) {
           const no_models_available = new Model(null, 'no models available', null, null, null, null);
