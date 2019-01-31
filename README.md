@@ -4,7 +4,7 @@
 
 A friendly frontend to provide Anchor-Explanations for machine learning models in conjunction with [javaAnchorServer](https://github.com/viadee/javaAnchorServer), [javaAnchorAdapters](https://github.com/viadee/javaAnchorAdapters) and [javaAnchorExplainer](https://github.com/viadee/javaAnchorExplainer).
 
-Global explanations are viewed like the following image which explains a modell trained from the titanic dataset:
+Global explanations are viewed like the following image. It explains a modell trained from the titanic dataset. 0 denotes persons who could not be rescued and 1 denotes persons who could.
 
 ![Titanic Explanation](https://user-images.githubusercontent.com/5667523/51996301-bde31580-24b4-11e9-9c75-6205546d1463.png)
 
