@@ -28,3 +28,9 @@ It stands for "added precision" and gives a hint about the importance of this pr
 ### What is added precision:
 Anchors is round-based. This means that only one predicate is selected per round. For each feature, an analysis of the precision is performed if the values of all other features change. The features with the highest precision are then determined. This process continues until the minimum precision is exceeded (configurable via "Min-precision").
 The added precision therefore indicates the order in which the predicates were accepted.
+
+## Collaboration
+The project is operated and further developed by the viadee Consulting AG in Münster, Westphalia. Results from theses at the FH Münster have been incorporated.
+
+- Further theses are planned: Contact person is Dr. Frank Köhne from viadee. Community contributions to the project are welcome: Please open Github-Issues with suggestions (or PR), which we can then edit in the team.
+- We are looking for further partners who have interesting process data to refine our tooling as well as partners that are simply interested in a discussion about AI in the context of business process automation and explainability.
