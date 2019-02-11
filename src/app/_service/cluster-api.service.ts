@@ -13,6 +13,12 @@ export class ClusterApiService {
   constructor(private http: HttpClient) {
   }
 
+  getVersion(): Observable<string> {
+    return this.http.get(`${BackendApiService.getBackendUrlClean()}/version`,
+      {responseType: 'text'}
+    );
+  }
+
   tryConnect(connectionName: string): Observable<any> {
     return this.http.get(
       `${BackendApiService.getBackendUrl(connectionName)}/try_connect`,

@@ -1,9 +1,11 @@
+@import "~src/styles";
+
 .table td {
   text-align: center;
 }
 
 .header {
   color: #495057;
-  background-color: #e9ecef;
+  background-color: $bg-gray;
   border-color: #dee2e6;
 }
