@@ -22,6 +22,7 @@ import { GlobalModelExplanationOverviewComponent } from './global-model-explanat
 import { GlobalModelExplanationTabularComponent } from './global-model-explanation-tabular/global-model-explanation-tabular.component';
 import { AnchorAlgoConfigurationComponent } from './anchor-algo-configuration/anchor-algo-configuration.component';
 import { IndexComponent } from './index/index.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   entryComponents: [
@@ -42,6 +43,7 @@ import { IndexComponent } from './index/index.component';
     GlobalModelExplanationTabularComponent,
     AnchorAlgoConfigurationComponent,
     IndexComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,9 +52,6 @@ import { IndexComponent } from './index/index.component';
     HttpClientModule,
     Ng2SmartTableModule,
     NgxSpinnerModule,
-    // BsDropdownModule.forRoot(),
-    // ModalModule.forRoot(),
-    // ChartsModule,
     routing
   ],
   providers: [DecimalPipe, GlobalVariablesComponent],
