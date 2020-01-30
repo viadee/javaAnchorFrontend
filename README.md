@@ -1,6 +1,13 @@
+# DEPRECATED - no longer actively maintained or updated
+
+Feel free to fork the project or visit our actively maintained [main anchors repository](https://github.com/viadee/javaAnchorExplainer) for updates. 
+
+---
+
 # javaAnchorFrontend
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 A friendly frontend to provide Anchor-Explanations for machine learning models in conjunction with [javaAnchorServer](https://github.com/viadee/javaAnchorServer), [javaAnchorAdapters](https://github.com/viadee/javaAnchorAdapters) and [javaAnchorExplainer](https://github.com/viadee/javaAnchorExplainer).
 
